@@ -1,38 +1,12 @@
 const W = 1920,
-  H = 1080,
-  HOLD = 4
+  H = 1080
 const slides = [
-  {
-    title: "Fake bank changes put real business payments at risk.",
-    support: "CAFC recommends checking bank changes through a trusted contact.",
-    kind: "problem",
-    duration: 8,
-  },
-  {
-    title: "PayProof holds new bank details until a person checks them.",
-    support: "An email can request a new account. It cannot change saved details.",
-    video: "hold.mp4",
-  },
-  {
-    title: "Only a separate person can approve the exact payment.",
-    support: "A saved contact checks the change; a separate approver decides.",
-    video: "review.mp4",
-  },
-  {
-    title: "Changing the payment removes the old approval.",
-    support: "",
-    video: "change.mp4",
-  },
-  {
-    title: "The agent records only the payment a person approved.",
-    support: "Fresh approval, one ledger entry, and a receipt that matches.",
-    video: "payment.mp4",
-  },
+  { title: "PayProof — Overview", kind: "video" },
+  { title: "Demo", kind: "demo" },
   {
     title: "Summary: PayProof checks actions with Atlas evidence.",
     support: "The server applies the rules. Atlas keeps the trusted data and decisions.",
     kind: "features",
-    duration: 8,
   },
 ]
 const canvas = document.querySelector("#screen"),
@@ -55,15 +29,10 @@ const diag = (window.pitchDiagnostics = {
   restarts: 0,
   gpuFrames: 0,
   errors: [],
-  holdSeconds: HOLD,
+  holdSeconds: 0,
   videoTime: 0,
 })
-let loadController
 let index = 0,
-  start = performance.now(),
-  holdAt = null,
-  loading = false,
-  token = 0,
   renderer,
   prevFrame = 0
 function issue(e) {
@@ -191,130 +160,86 @@ function arrow(x, y, width) {
   line(x + width - 16, y - 12, x + width, y)
   line(x + width - 16, y + 12, x + width, y)
 }
-async function select(n, restart = false) {
+
+const videoPanel = document.querySelector("#video-panel")
+const playButton = document.querySelector("#play")
+const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4"
+video.src = videoSource
+video.muted = false
+video.volume = 1
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) video.pause()
+})
+video.addEventListener("error", () => issue("Video could not load: " + videoSource))
+async function togglePlayback() {
+  if (index !== 0) return
+  if (!video.paused) {
+    video.pause()
+    return
+  }
+  try {
+    await video.play()
+  } catch (error) {
+    issue("Video playback: " + error)
+  }
+}
+playButton.addEventListener("click", () => {
+  void togglePlayback()
+})
+video.addEventListener("play", () => {
+  playButton.hidden = true
+  diag.phase = "playing"
+})
+video.addEventListener("pause", () => {
+  playButton.hidden = false
+  diag.phase = video.ended ? "ended" : "paused"
+})
+video.addEventListener("ended", () => {
+  playButton.hidden = false
+  playButton.textContent = "Replay overview"
+  diag.phase = "ended"
+})
+function select(n, restart = false) {
   const next = Math.max(0, Math.min(slides.length - 1, n))
   if (next === index && !restart && diag.ready) return
-  loadController?.abort()
-  loadController = new AbortController()
-  const t = ++token
+  video.pause()
   index = next
   diag.slide = index
-  holdAt = null
-  diag.phase = "active"
-  start = performance.now()
-  video.pause()
-  video.removeAttribute("src")
-  video.load()
-  loading = false
-  document.querySelector("#title").textContent = slides[index].title
-  document.querySelector("#source").hidden = index !== 0
-  location.hash = String(index + 1)
+  diag.phase = "paused"
+  if (index === 0) {
+    video.currentTime = 0
+    playButton.textContent = "Play overview · sound on"
+    playButton.hidden = false
+  }
   if (restart) diag.restarts++
-  const slide = slides[index]
-  if (slide.video) {
-    loading = true
-    video.src = "media/" + slide.video
-    video.muted = true
-    video.addEventListener(
-      "loadeddata",
-      async () => {
-        if (t !== token) return
-        try {
-          video.currentTime = 0
-          await video.play()
-          if (t === token) {
-            loading = false
-            start = performance.now()
-          }
-        } catch (e) {
-          if (t === token) {
-            loading = false
-            issue("Video playback: " + e)
-          }
-        }
-      },
-      { once: true, signal: loadController.signal },
-    )
-    video.addEventListener(
-      "error",
-      () => {
-        if (t === token) {
-          loading = false
-          issue("Video failed: " + slide.video)
-        }
-      },
-      { once: true, signal: loadController.signal },
-    )
-  }
+  videoPanel.hidden = index !== 0
+  document.querySelector("#title").textContent = slides[index].title
+  location.hash = String(index + 1)
   diag.ready = true
+  draw()
 }
-window.addEventListener("keydown", (e) => {
-  if (!["ArrowRight", "ArrowLeft", "ArrowDown"].includes(e.key)) return
-  e.preventDefault()
-  if (e.repeat) return
-  if (e.key === "ArrowRight") void select(index + 1)
-  else if (e.key === "ArrowLeft") void select(index - 1)
-  else void select(index, true)
+window.addEventListener("keydown", (event) => {
+  if (!["ArrowRight", "ArrowLeft", "ArrowDown", " ", "Spacebar"].includes(event.key)) return
+  if (event.target instanceof HTMLVideoElement && event.key === " ") return
+  event.preventDefault()
+  if (event.repeat) return
+  if (event.key === "ArrowRight") select(index + 1)
+  else if (event.key === "ArrowLeft") select(index - 1)
+  else if (event.key === "ArrowDown") select(index, true)
+  else void togglePlayback()
 })
-window.addEventListener("pointerdown", () => {
-  if (slides[index].video && video.paused && !holdAt) video.play().catch(issue)
-})
-function draw(now) {
+function draw() {
   const slide = slides[index]
-  const duration = slide.video
-    ? Number.isFinite(video.duration)
-      ? video.duration
-      : 10
-    : slide.duration
-  let active = slide.video ? video.currentTime : (now - start) / 1000
-  if (!loading && active >= duration - 0.05 && holdAt === null) {
-    holdAt = now
-    video.pause()
-    diag.phase = "hold"
-  }
-  const hold = holdAt === null ? 0 : (now - holdAt) / 1000
-  if (hold >= HOLD) {
-    diag.loops++
-    void select(index, true)
-  }
-  const elapsed = holdAt === null ? active : duration + hold
-  diag.phase = loading ? "loading" : holdAt === null ? "active" : "hold"
-  diag.videoTime = video.currentTime
-  diag.elapsed = elapsed
-  diag.duration = duration
-  diag.remaining = Math.max(0, duration + HOLD - elapsed)
   ctx.fillStyle = "#f5f8f5"
   ctx.fillRect(0, 0, W, H)
-  const titleEnd = paragraph(slide.title, 64, 48, 1792, 64, "#193e35", 700)
-  const supportEnd = slide.support
-    ? paragraph(slide.support, 64, titleEnd + 28, 1792, 40)
-    : titleEnd
-  const bodyTop = supportEnd + 34
-  if (slide.kind === "problem") {
-    let y = paragraph("About CAD 3.5M", 64, bodyTop + 12, 900, 94, "#193e35", 700)
-    y = paragraph(
-      "recovered in a payment-redirection case at one Quebec business.",
-      64,
-      y + 26,
-      890,
-      40,
-    )
-    y = paragraph("CAFC also lists construction firms as common targets.", 64, y + 52, 890, 40)
-    const flow = [
-      { title: "Fake email", detail: "A criminal acts as a known contact." },
-      { title: "New bank details", detail: "The email asks for another account." },
-      { title: "Business payment", detail: "Check the change before sending." },
-    ]
-    flow.forEach((item, i) => {
-      const top = bodyTop + 12 + i * 208
-      ctx.fillStyle = i === 1 ? "#f1dfc3" : "#dbe8e0"
-      ctx.fillRect(1040, top, 816, 160)
-      const end = paragraph(item.title, 1070, top + 24, 756, 44, "#193e35", 700)
-      paragraph(item.detail, 1070, end + 18, 756, 38)
-      if (i < 2) text("↓", 1420, top + 198, 42, "#799489")
-    })
-    text("Source: Canadian Anti-Fraud Centre, May 13, 2026", 64, 1035, 28, "#587269")
+  if (slide.kind === "demo") {
+    text("Demo", 120, 400, 150, "#193e35", 700)
+    text("Switch to the app", 128, 540, 54)
+    text("Ctrl + Tab", 128, 628, 44, "#587269")
   } else if (slide.kind === "features") {
+    const titleEnd = paragraph(slide.title, 64, 48, 1792, 64, "#193e35", 700)
+    const supportEnd = paragraph(slide.support, 64, titleEnd + 28, 1792, 40)
+    const bodyTop = supportEnd + 34
     const top = bodyTop + 12
     const node = (x, y, width, height, title, detail, strong = false) => {
       ctx.fillStyle = strong ? "#d7e8dc" : "#e3ebe6"
@@ -387,81 +312,31 @@ function draw(now) {
       38,
       "#587269",
     )
-  } else {
-    const videoTop = bodyTop
-    ctx.fillStyle = "#fff"
-    ctx.fillRect(64, videoTop, 1280, 720)
-    if (video.readyState >= 2) ctx.drawImage(video, 64, videoTop, 1280, 720)
-    else text("Preparing the demo…", 130, videoTop + 320, 38)
-    const x = 1392,
-      width = 464
-    let y = videoTop + 18
-    if (index === 1) {
-      y = paragraph("Saved supplier account", x, y, width, 40)
-      y = paragraph("0042", x, y + 22, width, 72, "#193e35", 700)
-      y = paragraph("Requested by the email", x, y + 42, width, 40)
-      y = paragraph("7719", x, y + 22, width, 72, "#a66b20", 700)
-      y = paragraph("Payment is on hold.", x, y + 44, width, 44, "#193e35", 700)
-      paragraph("A separate person must check the account.", x, y + 30, width, 38)
-    }
-    if (index === 2) {
-      y = paragraph("Saved contact: Alex Chen", x, y, width, 40)
-      y = paragraph("Independent check of the change", x, y + 34, width, 40)
-      text("↓", x + 200, y + 54, 42, "#799489")
-      y = paragraph("Separate approver account", x, y + 94, width, 44, "#193e35", 700)
-      y = paragraph("CAD 4,800 · account ending 7719", x, y + 32, width, 40)
-      paragraph("Approval applies to these exact details.", x, y + 36, width, 38)
-    }
-    if (index === 3) {
-      y = paragraph("CAD 4,800 → 4,900", x, y, width, 60, "#193e35", 700)
-      const approvalTop = y + 38
-      y = paragraph("Previous approval", x, approvalTop, width, 40, "#587269")
-      ctx.font = "400 40px Arial,sans-serif"
-      line(
-        x,
-        approvalTop + 17,
-        x + ctx.measureText("Previous approval").width,
-        approvalTop + 17,
-        "#587269",
-        3,
-      )
-      y = paragraph("“Payment revision changed”", x, y + 52, width, 40, "#a66b20")
-      paragraph("New details need new approval.", x, y + 46, width, 38)
-    }
-    if (index === 4) {
-      y = paragraph("New approval: CAD 4,800", x, y, width, 44, "#193e35", 700)
-      y = paragraph("Account ending 7719", x, y + 26, width, 40)
-      text("↓", x + 200, y + 56, 42, "#799489")
-      y = paragraph("One simulated ledger entry", x, y + 96, width, 44, "#193e35", 700)
-      y = paragraph("Receipt matches this payment.", x, y + 38, width, 40)
-      paragraph("A separate HTTP service records it.", x, y + 34, width, 38)
-    }
   }
-  ctx.fillStyle = "#799489"
-  ctx.fillRect(0, 0, W, 6)
-  ctx.fillStyle = "#b6d19b"
-  ctx.fillRect(0, 0, W * Math.max(0, 1 - elapsed / (duration + HOLD)), 6)
+  diag.videoTime = video.currentTime
+  diag.muted = video.muted
   try {
     renderer?.()
-  } catch (e) {
-    issue(e)
+  } catch (error) {
+    issue(error)
     fallback()
     renderer?.()
   }
 }
 window.payproofDeck = {
-  select: (n) => select(n),
+  select,
   restart: () => select(index, true),
-  slides: slides.map((s) => s.title),
+  slides: slides.map((slide) => slide.title),
   diagnostics: diag,
-  render: () => draw(performance.now()),
+  render: draw,
+  play: togglePlayback,
 }
 diag.logoLoaded = await logoReady
 await initRenderer()
-await select(Math.max(0, Math.min(5, Number(location.hash.slice(1) || 1) - 1)), true)
+select(Math.max(0, Math.min(2, Number(location.hash.slice(1) || 1) - 1)), true)
 function frame(now) {
   if (now - prevFrame > 30) {
-    draw(now)
+    draw()
     prevFrame = now
   }
   requestAnimationFrame(frame)
