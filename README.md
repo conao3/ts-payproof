@@ -77,6 +77,18 @@ pnpm start
 
 `nix run` builds and starts the same application and ledger from a Nix store artifact. Supply environment variables in the invoking shell. The application and ledger listen only on loopback. A deployment must provide a same-origin reverse proxy, set `APP_ORIGIN` to its HTTPS origin, keep ledger access private and inject secrets outside the source tree.
 
+## Restore the presenter demo
+
+On the presenter workstation, keep the existing application, ledger, UI and pitch servers running on ports 4100, 4101, 5173 and 4174. With the local `.env` and Chrome DevTools profile `conao3` available, run:
+
+```sh
+./scripts/reset-demo.sh
+```
+
+This adds a fresh synthetic invoice in `received`, revision 0, with no extraction or payment. It reuses the recorded, isolated operator and approver windows when they still exist, or creates isolated replacements. The operator starts on the Demo slide; the application has the new invoice selected by its exact ID. Click **Run invoice agent** yourself to demonstrate the changed-account hold.
+
+The script never deletes or rewinds invoices, audit history or ledger entries, never runs the invoice/payment agent, and never starts another server. Credentials stay in the local Node process and HTTP-only session cookies. If browser preparation fails, it exits unsuccessfully and prints the fresh invoice ID, manifest path and manual recovery URLs; the new invoice remains available.
+
 ## Checks
 
 ```sh

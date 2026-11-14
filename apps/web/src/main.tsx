@@ -292,6 +292,7 @@ function Workspace({
             {invoices.map((i) => (
               <Button
                 key={i.id}
+                data-invoice-id={i.id}
                 className={`invoice-row ${!compose && invoice?.id === i.id ? "selected" : ""}`}
                 onPress={() => {
                   setSelected(i.id)
