@@ -29,8 +29,8 @@ const slides = [
     video: "payment.mp4",
   },
   {
-    title: "Summary: Atlas links permission, action, and evidence.",
-    support: "The server checks live permissions and approved details before each action.",
+    title: "Summary: PayProof checks actions with Atlas evidence.",
+    support: "The server applies the rules. Atlas keeps the trusted data and decisions.",
     kind: "features",
     duration: 8,
   },
@@ -41,6 +41,12 @@ const source = document.createElement("canvas")
 source.width = W
 source.height = H
 const ctx = source.getContext("2d")
+const mongoLogo = new Image()
+const logoReady = new Promise((resolve) => {
+  mongoLogo.addEventListener("load", () => resolve(true), { once: true })
+  mongoLogo.addEventListener("error", () => resolve(false), { once: true })
+  mongoLogo.src = new URL("assets/mongodb-wordmark.svg", import.meta.url).href
+})
 const diag = (window.pitchDiagnostics = {
   renderer: "initializing",
   slide: 0,
@@ -309,37 +315,74 @@ function draw(now) {
     })
     text("Source: Canadian Anti-Fraud Centre, May 13, 2026", 64, 1035, 28, "#587269")
   } else if (slide.kind === "features") {
-    const layers = [
-      { x: 64, title: "Who can act?", a: "Saved identities", b: "Human and agent roles" },
-      {
-        x: 700,
-        title: "What is allowed?",
-        a: "Policy + exact approval",
-        b: "Amount, account, revision",
-      },
-      { x: 1336, title: "What happened?", a: "State + audit events", b: "Actor, reason, receipt" },
-    ]
-    layers.forEach((layer, i) => {
-      ctx.fillStyle = "#dbe8e0"
-      ctx.fillRect(layer.x, bodyTop, 520, 380)
-      let end = paragraph(layer.title, layer.x + 28, bodyTop + 32, 464, 44, "#193e35", 700)
-      end = paragraph(layer.a, layer.x + 28, end + 46, 464, 40)
-      paragraph(layer.b, layer.x + 28, end + 34, 464, 38)
-      if (i < 2) arrow(layer.x + 536, bodyTop + 190, 78)
-    })
-    const evidenceEnd = paragraph(
-      "13 recorded actions → 1 simulated ledger entry.",
-      64,
-      bodyTop + 432,
-      1792,
-      44,
-      "#193e35",
+    const top = bodyTop + 12
+    const node = (x, y, width, height, title, detail, strong = false) => {
+      ctx.fillStyle = strong ? "#d7e8dc" : "#e3ebe6"
+      ctx.fillRect(x, y, width, height)
+      const end = paragraph(title, x + 28, y + 26, width - 56, strong ? 48 : 44, "#193e35", 700)
+      paragraph(detail, x + 28, end + 24, width - 56, 38)
+    }
+    node(64, top, 520, 280, "Email → LLM", "Extract supplier, amount and requested account.")
+    node(
       700,
+      top,
+      570,
+      280,
+      "PayProof server",
+      "Compare and hold. Check roles, latest revision and approval before action.",
+      true,
+    )
+    node(1420, top, 436, 280, "HTTP payment", "One simulated ledger entry. Return a receipt.")
+    arrow(600, top + 140, 84)
+    arrow(1286, top + 122, 118)
+    line(1404, top + 176, 1286, top + 176)
+    line(1302, top + 164, 1286, top + 176)
+    line(1302, top + 188, 1286, top + 176)
+    const lower = top + 380
+    node(
+      700,
+      lower,
+      570,
+      214,
+      "Separate human",
+      "Use a saved supplier contact. Approve the exact payment.",
+    )
+    line(985, top + 296, 985, lower - 16)
+    line(973, top + 312, 985, top + 296)
+    line(997, top + 312, 985, top + 296)
+    line(973, lower - 32, 985, lower - 16)
+    line(997, lower - 32, 985, lower - 16)
+    ctx.fillStyle = "#d7e8dc"
+    ctx.fillRect(64, lower, 520, 320)
+    if (mongoLogo.complete && mongoLogo.naturalWidth)
+      ctx.drawImage(mongoLogo, 96, lower + 24, 250, (250 * 278) / 1102)
+    else text("MongoDB", 96, lower + 75, 44, "#193e35", 700)
+    let storeEnd = paragraph("Atlas data store", 96, lower + 114, 456, 44, "#193e35", 700)
+    storeEnd = paragraph("Identities · suppliers", 96, storeEnd + 22, 456, 38)
+    paragraph("Approvals · state · audit", 96, storeEnd + 20, 456, 38)
+    ctx.strokeStyle = "#799489"
+    ctx.lineWidth = 4
+    ctx.beginPath()
+    ctx.moveTo(684, top + 220)
+    ctx.lineTo(640, top + 220)
+    ctx.lineTo(640, lower + 160)
+    ctx.lineTo(600, lower + 160)
+    ctx.stroke()
+    line(616, lower + 148, 600, lower + 160)
+    line(616, lower + 172, 600, lower + 160)
+    line(668, top + 208, 684, top + 220)
+    line(668, top + 232, 684, top + 220)
+    const resultEnd = paragraph(
+      "The server verifies the receipt, then saves state and audit in Atlas.",
+      64,
+      lower + 352,
+      1792,
+      40,
     )
     paragraph(
       "Synthetic supplier check. Simulated payment.",
       64,
-      evidenceEnd + 54,
+      resultEnd + 32,
       1792,
       38,
       "#587269",
@@ -413,6 +456,7 @@ window.payproofDeck = {
   diagnostics: diag,
   render: () => draw(performance.now()),
 }
+diag.logoLoaded = await logoReady
 await initRenderer()
 await select(Math.max(0, Math.min(5, Number(location.hash.slice(1) || 1) - 1)), true)
 function frame(now) {
