@@ -94,6 +94,8 @@ nix develop --command pnpm test:atlas
 
 They verify independent confirmation, human/agent separation, tenant isolation, approval invalidation, concurrent approval and dispatch, supplier-revision conflicts, canonical duplicate invoice numbers and cancellation races. The simulated ledger is exercised against real MongoDB in this suite. Unit tests exercise the actual HTTP function-calling protocol against an explicitly controlled provider; they are not presented as live model evaluation.
 
+The check suite includes ten voice authorization and protocol tests, covering tenant isolation, disabled identities, read-only tool access, rejected action requests, unknown citations and snapshot changes. A live smoke test also generated a synthetic question with ElevenLabs, submitted it through the authenticated HTTP endpoint, transcribed it with Scribe v2, obtained an OpenAI answer from actual Atlas records and synthesized that answer with ElevenLabs. All eight returned evidence references matched the invoice. The invoice hash and simulated-ledger count were unchanged. This validated a synthetic audio roundtrip; a person's microphone input is a separate browser test.
+
 ## Structure
 
 - `packages/core`: validated domain data, canonical payment hashes and authority checks.
