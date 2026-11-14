@@ -10,6 +10,10 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
   const [question, setQuestion] = useState("")
   const [answer, setAnswer] = useState<VoiceAnswer | null>(null)
   const [error, setError] = useState("")
+  const [playbackBlocked, setPlaybackBlocked] = useState(false)
+  const answerAudio = useRef<HTMLAudioElement | null>(null)
+  const request = useRef<AbortController | null>(null)
+  const requestSequence = useRef(0)
   const [busy, setBusy] = useState(false)
   const [recording, setRecording] = useState(false)
   const [starting, setStarting] = useState(false)
@@ -33,16 +37,56 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
       })
     return () => {
       mounted.current = false
+      request.current?.abort()
+      answerAudio.current?.pause()
       if (timer.current) clearTimeout(timer.current)
       if (recorder.current?.state === "recording") recorder.current.stop()
       stream.current?.getTracks().forEach((track) => track.stop())
     }
   }, [])
 
+  useEffect(() => {
+    const player = answerAudio.current
+    if (!player || !answer?.audioBase64) return undefined
+    let active = true
+    void player.play().then(
+      () => {
+        if (!active) player.pause()
+        else setPlaybackBlocked(false)
+      },
+      () => {
+        if (active) setPlaybackBlocked(true)
+      },
+    )
+    return () => {
+      active = false
+      player.pause()
+    }
+  }, [answer])
+
+  function clearAnswer() {
+    answerAudio.current?.pause()
+    setPlaybackBlocked(false)
+    setAnswer(null)
+  }
+
+  async function playAnswer() {
+    try {
+      await answerAudio.current?.play()
+      if (mounted.current) setPlaybackBlocked(false)
+    } catch {
+      if (mounted.current) setPlaybackBlocked(true)
+    }
+  }
+
   async function ask(audio?: File) {
+    request.current?.abort()
+    const controller = new AbortController()
+    request.current = controller
+    const sequence = ++requestSequence.current
     setBusy(true)
     setError("")
-    setAnswer(null)
+    clearAnswer()
     try {
       const form = new FormData()
       if (audio) {
@@ -54,20 +98,20 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
         credentials: "same-origin",
         headers: audio ? {} : { "content-type": "application/json" },
         body: audio ? form : JSON.stringify({ invoiceId, question }),
-        signal: AbortSignal.timeout(150_000),
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(150_000)]),
       })
       const body: unknown = await response.json()
       if (!response.ok) throw new Error(z.object({ error: z.string() }).parse(body).error)
       const value = voiceAnswerSchema.parse(body)
-      if (mounted.current) {
+      if (mounted.current && sequence === requestSequence.current) {
         setQuestion(value.question)
         setAnswer(value)
       }
     } catch (reason) {
-      if (mounted.current)
+      if (mounted.current && sequence === requestSequence.current && !controller.signal.aborted)
         setError(reason instanceof Error ? reason.message : "Could not answer this question")
     } finally {
-      if (mounted.current) setBusy(false)
+      if (mounted.current && sequence === requestSequence.current) setBusy(false)
     }
   }
 
@@ -82,6 +126,7 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
     if (startingRef.current || recorder.current?.state === "recording") return
     startingRef.current = true
     setStarting(true)
+    clearAnswer()
     setError("")
     try {
       if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
@@ -186,10 +231,20 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
           <p className="voice-answer-text">{answer.answer}</p>
           {answer.audioBase64 && (
             <audio
+              ref={answerAudio}
+              onPlay={() => setPlaybackBlocked(false)}
               controls
               aria-label="Spoken audit answer"
               src={`data:audio/mpeg;base64,${answer.audioBase64}`}
             />
+          )}
+          {playbackBlocked && (
+            <div className="voice-notice">
+              <p>Automatic playback was blocked. Play the answer below.</p>
+              <Button className="secondary" onPress={() => void playAnswer()}>
+                <Volume2 size={16} /> Play answer
+              </Button>
+            </div>
           )}
           {answer.speechError && <p className="voice-notice">{answer.speechError}</p>}
           <div className="voice-evidence-heading">
