@@ -1,7 +1,7 @@
 import * as z from "zod"
 z.config({ jitless: true })
 import React, { useState } from "react"
-import { createRoot } from "react-dom/client"
+import { createRoot, type Root } from "react-dom/client"
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client"
 import { ApolloProvider, useApolloClient, useMutation, useQuery } from "@apollo/client/react"
 import {
@@ -776,7 +776,9 @@ function StatusBanner({ invoice }: { invoice: InvoiceViewFragment }) {
 import { InvoiceViewFragmentDoc } from "./graphql/generated/graphql"
 const root = document.getElementById("root")
 if (!root) throw new Error("Application root is missing")
-createRoot(root).render(
+const reactRoot: Root = import.meta.hot?.data.reactRoot ?? createRoot(root)
+if (import.meta.hot) import.meta.hot.data.reactRoot = reactRoot
+reactRoot.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <App />
