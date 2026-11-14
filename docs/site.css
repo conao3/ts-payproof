@@ -360,9 +360,28 @@ p + p {
     gap: 2rem;
   }
   .map-branches {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin-left: 0.5rem;
+    padding-top: 1rem;
+    border-left: 2px solid var(--forest);
   }
-  .map-node span br {
+  .map-branches > div {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  .map-branches > div::before {
+    content: "↔";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--forest);
+  }
+  .map-branches > div > .map-arrow {
     display: none;
   }
 }
