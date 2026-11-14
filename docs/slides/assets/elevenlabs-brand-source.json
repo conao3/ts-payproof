@@ -1,0 +1,24 @@
+{
+  "source": "https://elevenlabs.io/brand",
+  "checked": "2026-11-14T21:32:40.467Z",
+  "conditions": {
+    "clearance": "at least the full logo height on all sides",
+    "spelling": "ElevenLabs",
+    "asset": "official black or white wordmark, unchanged; no reconstruction with typed II or 11",
+    "application": "App STT/TTS identification; no affiliation/endorsement claim; distinct from Microsoft Grant narration"
+  },
+  "items": [
+    {
+      "color": "black",
+      "url": "https://11labs-nonprd-15f22c1d.s3.eu-west-3.amazonaws.com/0b9cd3e1-9fad-4a5b-b3a0-c96b0a1f1d2b/elevenlabs-logo-black.svg",
+      "bytes": 3446,
+      "sha256": "7a41b7f26b6286f607d34c80a658ef06e5cb6c094a1b087b563c8508e15f2178"
+    },
+    {
+      "color": "white",
+      "url": "https://11labs-nonprd-15f22c1d.s3.eu-west-3.amazonaws.com/0b9cd3e1-9fad-4a5b-b3a0-c96b0a1f1d2b/elevenlabs-logo-white.svg",
+      "bytes": 3446,
+      "sha256": "e9643312068cbadbc4329fbbb63261c458f4f97caa6b784460dfd7fdc2b4b8c1"
+    }
+  ]
+}

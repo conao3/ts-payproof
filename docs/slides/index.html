@@ -43,11 +43,10 @@
     }
     #player {
       position: relative;
-      width: min(1200px, calc(100vw - 96px), calc((100vh - 96px) * 16 / 9));
+      width: min(1200px, calc(100vw - 96px), calc((100vh - 176px) * 16 / 9));
       aspect-ratio: 16 / 9;
     }
-    #video-panel[hidden],
-    #play[hidden] {
+    #video-panel[hidden] {
       display: none;
     }
     video {
@@ -56,23 +55,22 @@
       height: 100%;
       object-fit: contain;
     }
-    #play {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px 30px;
-      border: 2px solid #b9d3c6;
-      background: #10231ef0;
+    #next {
+      position: fixed;
+      right: 32px;
+      bottom: 24px;
+      padding: 12px 24px;
+      border: 1px solid #b9d3c6;
+      background: #10231e;
       color: #fff;
       font:
-        clamp(22px, 3vw, 48px) Arial,
+        24px Arial,
         sans-serif;
       cursor: pointer;
     }
-    #play:focus-visible {
-      outline: 4px solid white;
-      outline-offset: 6px;
+    #next:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 4px;
     }
   </style>
   <div id="stage">
@@ -80,10 +78,10 @@
     <h1 class="sr" id="title">PayProof</h1>
     <div id="video-panel">
       <div id="player">
-        <video id="video" controls playsinline preload="metadata" tabindex="0"></video
-        ><button id="play" type="button">Play overview · sound on</button>
+        <video id="video" controls playsinline preload="metadata" tabindex="0"></video>
       </div>
+      <button id="next" type="button">Next</button>
     </div>
   </div>
-  <script type="module" src="deck.js?v=20261114-v10-player-keys"></script>
+  <script type="module" src="deck.js?v=20261114-voice-next"></script>
 </html>

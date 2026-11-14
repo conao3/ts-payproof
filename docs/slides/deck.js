@@ -21,6 +21,12 @@ const logoReady = new Promise((resolve) => {
   mongoLogo.addEventListener("error", () => resolve(false), { once: true })
   mongoLogo.src = new URL("assets/mongodb-wordmark.svg", import.meta.url).href
 })
+const elevenLogo = new Image()
+const elevenLogoReady = new Promise((resolve) => {
+  elevenLogo.addEventListener("load", () => resolve(true), { once: true })
+  elevenLogo.addEventListener("error", () => resolve(false), { once: true })
+  elevenLogo.src = new URL("assets/elevenlabs-logo-black.svg", import.meta.url).href
+})
 const diag = (window.pitchDiagnostics = {
   renderer: "initializing",
   slide: 0,
@@ -162,7 +168,7 @@ function arrow(x, y, width) {
 }
 
 const videoPanel = document.querySelector("#video-panel")
-const playButton = document.querySelector("#play")
+const nextButton = document.querySelector("#next")
 const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=10"
 video.src = videoSource
 video.poster = "assets/title-card.svg"
@@ -184,28 +190,18 @@ async function togglePlayback() {
     issue("Video playback: " + error)
   }
 }
-playButton.addEventListener("click", () => {
-  video.focus({ preventScroll: true })
-  void togglePlayback()
-})
-videoPanel.addEventListener("click", (event) => {
-  if (index === 0 && event.target === videoPanel) select(1)
-})
+nextButton.addEventListener("click", () => select(1))
 video.addEventListener("play", () => {
   if (index !== 0) {
     video.pause()
     return
   }
-  playButton.hidden = true
   diag.phase = "playing"
 })
 video.addEventListener("pause", () => {
-  playButton.hidden = false
   diag.phase = video.ended ? "ended" : "paused"
 })
 video.addEventListener("ended", () => {
-  playButton.hidden = false
-  playButton.textContent = "Replay overview"
   diag.phase = "ended"
 })
 function select(n, restart = false) {
@@ -217,8 +213,6 @@ function select(n, restart = false) {
   diag.phase = "paused"
   if (index === 0) {
     video.currentTime = 0
-    playButton.textContent = "Play overview · sound on"
-    playButton.hidden = false
   }
   if (restart) diag.restarts++
   videoPanel.hidden = index !== 0
@@ -274,7 +268,7 @@ function draw() {
     line(1404, top + 176, 1286, top + 176)
     line(1302, top + 164, 1286, top + 176)
     line(1302, top + 188, 1286, top + 176)
-    const lower = top + 380
+    const lower = top + 340
     node(
       700,
       lower,
@@ -283,19 +277,21 @@ function draw() {
       "Separate human",
       "Use a saved supplier contact. Approve the exact payment.",
     )
-    node(
-      1420,
-      lower,
-      436,
-      320,
-      "One operation ID",
-      "Unique tenant + operation key prevents duplicate entries.",
-    )
+    ctx.fillStyle = "#e3ebe6"
+    ctx.fillRect(1420, lower, 436, 320)
+    if (elevenLogo.complete && elevenLogo.naturalWidth)
+      ctx.drawImage(elevenLogo, 1460, lower + 40, 280, (280 * 90) / 694)
+    else text("ElevenLabs", 1460, lower + 76, 44, "#193e35", 700)
+    paragraph("Read-only Q&A", 1460, lower + 112, 356, 44, "#193e35", 700)
+    paragraph("STT → server → TTS. Atlas evidence only.", 1460, lower + 180, 356, 38)
+    line(1286, top + 240, 1340, top + 240)
+    line(1340, top + 240, 1340, lower + 110)
+    arrow(1340, lower + 110, 64)
+    line(1302, top + 228, 1286, top + 240)
+    line(1302, top + 252, 1286, top + 240)
     line(985, top + 296, 985, lower - 16)
     line(973, top + 312, 985, top + 296)
     line(997, top + 312, 985, top + 296)
-    line(973, lower - 32, 985, lower - 16)
-    line(997, lower - 32, 985, lower - 16)
     ctx.fillStyle = "#d7e8dc"
     ctx.fillRect(64, lower, 520, 320)
     if (mongoLogo.complete && mongoLogo.naturalWidth)
@@ -317,16 +313,23 @@ function draw() {
     line(668, top + 208, 684, top + 220)
     line(668, top + 232, 684, top + 220)
     const resultEnd = paragraph(
-      "Atomic updates keep state + history together. Receipt checked before paid.",
+      "Unique tenant + operation key prevents duplicate entries.",
       64,
-      lower + 352,
+      lower + 340,
+      1792,
+      40,
+    )
+    const atomicEnd = paragraph(
+      "State + history update atomically. Receipt checked before paid.",
+      64,
+      resultEnd + 18,
       1792,
       40,
     )
     paragraph(
-      "Real LLM + Atlas. Synthetic supplier check. Simulated payment.",
+      "Real LLM, Atlas and voice API. Synthetic check. Simulated payment.",
       64,
-      resultEnd + 32,
+      atomicEnd + 24,
       1792,
       38,
       "#587269",
@@ -351,6 +354,7 @@ window.payproofDeck = {
   play: togglePlayback,
 }
 diag.logoLoaded = await logoReady
+diag.elevenLogoLoaded = await elevenLogoReady
 await initRenderer()
 select(Math.max(0, Math.min(2, Number(location.hash.slice(1) || 1) - 1)), true)
 function frame(now) {
