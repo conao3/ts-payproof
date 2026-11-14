@@ -163,7 +163,7 @@ function arrow(x, y, width) {
 
 const videoPanel = document.querySelector("#video-panel")
 const playButton = document.querySelector("#play")
-const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4"
+const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=9"
 video.src = videoSource
 video.muted = false
 video.volume = 1
