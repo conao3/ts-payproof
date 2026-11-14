@@ -6,6 +6,8 @@ pmOnFail: ignore
 allowBuilds:
   "@apollo/protobufjs": false
 overrides:
+  "@graphql-tools/utils@12.0.1": 12.0.2
+  "graphql-config>minimatch": 11.0.1
   vite: npm:@voidzero-dev/vite-plus-core@1.6.0
   postcss: 8.5.32
   tapable: 2.3.3
