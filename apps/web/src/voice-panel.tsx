@@ -12,6 +12,8 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
   const [error, setError] = useState("")
   const [busy, setBusy] = useState(false)
   const [recording, setRecording] = useState(false)
+  const [starting, setStarting] = useState(false)
+  const startingRef = useRef(false)
   const recorder = useRef<MediaRecorder | null>(null)
   const stream = useRef<MediaStream | null>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -77,12 +79,17 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
   }
 
   async function startRecording() {
+    if (startingRef.current || recorder.current?.state === "recording") return
+    startingRef.current = true
+    setStarting(true)
     setError("")
-    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setError("Recording requires a supported browser on HTTPS or localhost. You can type instead")
-      return
-    }
     try {
+      if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+        setError(
+          "Recording requires a supported browser on HTTPS or localhost. You can type instead",
+        )
+        return
+      }
       stream.current = await navigator.mediaDevices.getUserMedia({ audio: true })
       if (!mounted.current) {
         stream.current.getTracks().forEach((track) => track.stop())
@@ -112,6 +119,9 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
     } catch {
       stream.current?.getTracks().forEach((track) => track.stop())
       setError("Microphone access was not available. You can type your question instead")
+    } finally {
+      startingRef.current = false
+      if (mounted.current) setStarting(false)
     }
   }
 
@@ -127,21 +137,25 @@ export function VoicePanel({ invoiceId }: { invoiceId: string }) {
         Ask why it is held, who approved it, or what happened after an amendment.
       </p>
       <div className="voice-question">
-        <TextField value={question} onChange={setQuestion} isDisabled={busy || recording}>
+        <TextField
+          value={question}
+          onChange={setQuestion}
+          isDisabled={busy || recording || starting}
+        >
           <Label>Your question</Label>
           <Input placeholder="Why is this payment held?" maxLength={1000} />
         </TextField>
         <Button
           className="secondary"
-          isDisabled={busy || !status?.transcription}
+          isDisabled={busy || starting || !status?.transcription}
           onPress={() => (recording ? stopRecording() : void startRecording())}
         >
           {recording ? <Square size={15} /> : <Mic size={16} />}
-          {recording ? "Stop and ask" : "Record question"}
+          {starting ? "Opening microphone…" : recording ? "Stop and ask" : "Record question"}
         </Button>
         <Button
           className="primary"
-          isDisabled={busy || recording || question.trim().length < 2}
+          isDisabled={busy || recording || starting || question.trim().length < 2}
           onPress={() => void ask()}
         >
           Ask
