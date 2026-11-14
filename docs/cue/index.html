@@ -119,6 +119,22 @@
         line-height: 1.5;
         margin: 0 0 22px;
       }
+      .input-label {
+        font-size: 18px;
+        font-weight: 650;
+        margin: 0 0 8px;
+      }
+      .input-value {
+        font-size: 19px;
+        line-height: 1.6;
+        padding: 14px;
+        border: 1px solid #b9cec3;
+        background: #fff;
+        overflow-wrap: anywhere;
+        user-select: all;
+        -webkit-user-select: all;
+        margin: 0 0 18px;
+      }
       .next {
         display: flex;
         justify-content: space-between;
@@ -243,7 +259,18 @@
         <div class="cue-heading"><span>0:20–0:50</span><span>2 / 7</span></div>
         <h2 id="heading-2">Verify & approve</h2>
         <p class="action" lang="ja">
-          Evidence貼付 → 保存済み連絡先checkbox → Record verification → Approve this payment。
+          approverの別窓へ切替 → F5 → 同じ請求を選択。Evidence欄へ下の英文を入力する。
+        </p>
+        <p class="input-label" lang="ja">Evidence欄に入力（デモ用）</p>
+        <p class="input-value">
+          Demo role-play: confirmed CAD 4,800 and account ending 7719 using the saved supplier
+          contact.
+        </p>
+        <p class="action" lang="ja">
+          「I used the saved contact above, not details supplied in the email.」にチェック → Record
+          verification → Approve this payment。
+          チェックは「メールに書かれた連絡先ではなく、登録済み連絡先で確認した」という意味。
+          この実演では合成ロールプレイとして記録する。
         </p>
         <p class="speech">
           A separate person checks the saved supplier contact. This check is a role-play. I approve
@@ -276,7 +303,17 @@
         <div class="cue-heading"><span>1:40–2:10</span><span>5 / 7</span></div>
         <h2 id="heading-5">Approve again</h2>
         <p class="action" lang="ja">
-          Evidence貼付 → checkbox → Record verification → Approve this payment。
+          4,800へ戻した後、approverの別窓でF5 →
+          同じ請求を選択。新しいrevisionに対し、Evidence欄へ下の英文をもう一度入力する。
+        </p>
+        <p class="input-label" lang="ja">Evidence欄に再入力（デモ用）</p>
+        <p class="input-value">
+          Demo role-play: confirmed CAD 4,800 and account ending 7719 using the saved supplier
+          contact.
+        </p>
+        <p class="action" lang="ja">
+          「I used the saved contact above, not details supplied in the email.」にチェック → Record
+          verification → Approve this payment。
         </p>
         <p class="speech">
           I check the new revision and approve it again. The agent cannot approve its own request.
