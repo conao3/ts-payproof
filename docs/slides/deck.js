@@ -185,9 +185,17 @@ async function togglePlayback() {
   }
 }
 playButton.addEventListener("click", () => {
+  video.focus({ preventScroll: true })
   void togglePlayback()
 })
+videoPanel.addEventListener("click", (event) => {
+  if (index === 0 && event.target === videoPanel) select(1)
+})
 video.addEventListener("play", () => {
+  if (index !== 0) {
+    video.pause()
+    return
+  }
   playButton.hidden = true
   diag.phase = "playing"
 })
@@ -214,14 +222,16 @@ function select(n, restart = false) {
   }
   if (restart) diag.restarts++
   videoPanel.hidden = index !== 0
+  if (index === 0) video.focus({ preventScroll: true })
   document.querySelector("#title").textContent = slides[index].title
   location.hash = String(index + 1)
   diag.ready = true
   draw()
 }
 window.addEventListener("keydown", (event) => {
+  // Native controls own all keyboard shortcuts on the overview.
+  if (index === 0) return
   if (!["ArrowRight", "ArrowLeft", "ArrowDown", " ", "Spacebar"].includes(event.key)) return
-  if (event.target instanceof HTMLVideoElement && event.key === " ") return
   event.preventDefault()
   if (event.repeat) return
   if (event.key === "ArrowRight") select(index + 1)
