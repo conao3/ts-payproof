@@ -141,6 +141,132 @@
         </div>
       </section>
 
+      <section class="architecture wrap" id="architecture" aria-labelledby="architecture-title">
+        <div class="section-heading">
+          <h2 id="architecture-title">
+            The model reads.<br />The server checks.<br />Atlas remembers.
+          </h2>
+          <p>
+            PayProof connects an untrusted email to a controlled payment workflow. The server
+            enforces the rules using current records in Atlas. A separate person gives permission
+            for a specific payment; the model cannot grant that permission itself.
+          </p>
+        </div>
+        <div class="architecture-layout">
+          <figure class="system-map" aria-label="PayProof architecture and data flow">
+            <div class="map-inputs">
+              <div class="map-node">
+                <strong>Finance operator</strong><span>Supplies the invoice email</span>
+              </div>
+              <span class="map-arrow" aria-hidden="true">↓</span>
+              <div class="map-node">
+                <strong>Language model</strong><span>Extracts supplier, amount, and account</span>
+              </div>
+              <span class="map-arrow" aria-hidden="true">↓</span>
+            </div>
+            <div class="map-server">
+              <strong>PayProof server</strong
+              ><span>Compare → hold → check authority → dispatch</span>
+            </div>
+            <div class="map-branches">
+              <div>
+                <span class="map-arrow" aria-hidden="true">↕</span>
+                <div class="map-node">
+                  <strong>Separate approver</strong
+                  ><span
+                    >Verifies through the saved contact;<br />approves exact payment details</span
+                  >
+                </div>
+              </div>
+              <div>
+                <span class="map-arrow" aria-hidden="true">↕</span>
+                <div class="map-node map-atlas">
+                  <img
+                    src="assets/mongodb-wordmark.svg"
+                    alt="MongoDB"
+                    width="1102"
+                    height="278"
+                  /><strong>Atlas</strong
+                  ><span>People · suppliers · approvals<br />Current state · decision history</span>
+                </div>
+              </div>
+              <div>
+                <span class="map-arrow" aria-hidden="true">↕</span>
+                <div class="map-node">
+                  <strong>HTTP payment simulator</strong
+                  ><span>Records one operation;<br />returns a matching receipt</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              The server reads trusted records and saves decisions in Atlas. Only a checked dispatch
+              reaches the simulator; its result returns through the server to Atlas. MongoDB® is a
+              registered trademark of MongoDB, Inc. Used here to identify the database; no
+              endorsement is implied.
+            </figcaption>
+          </figure>
+          <div class="architecture-notes">
+            <h3>What each part is responsible for</h3>
+            <dl>
+              <div>
+                <dt>Language model</dt>
+                <dd>
+                  Turns email text into a proposed invoice using limited server tools. Email
+                  instructions cannot replace a saved contact or approve a payment.
+                </dd>
+              </div>
+              <div>
+                <dt>PayProof server</dt>
+                <dd>
+                  Applies policy. Before dispatch, it checks the current user, approver, supplier,
+                  invoice revision, and exact approved details.
+                </dd>
+              </div>
+              <div>
+                <dt>MongoDB Atlas</dt>
+                <dd>
+                  Stores the trusted supplier and identity records, invoice, verification, approval,
+                  state, and audit events. Atlas supplies the data for the server's checks.
+                </dd>
+              </div>
+              <div>
+                <dt>Payment simulator</dt>
+                <dd>
+                  A separate HTTP service records the approved operation. It has no bank connection
+                  and moves no money.
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="architecture-examples">
+          <article>
+            <h3>0042 ≠ 7719: hold</h3>
+            <p>
+              The saved supplier account ends in 0042. The email requests 7719. The server holds the
+              invoice until a different person records a check through the saved supplier contact
+              and approves the proposed details.
+            </p>
+          </article>
+          <article>
+            <h3>$4,800 → $4,900: approve again</h3>
+            <p>
+              An approval covers a specific revision, amount, currency, destination, supplier
+              revision, and policy revision. Changing the amount clears the old verification and
+              approval. The server rejects a dispatch using the old revision.
+            </p>
+          </article>
+          <article>
+            <h3>Two requests → one entry</h3>
+            <p>
+              Concurrent dispatch requests converge on the same operation ID. The simulator uses a
+              unique tenant-and-operation key, so retrying that operation produces one ledger entry.
+              The server checks its receipt before marking the invoice paid.
+            </p>
+          </article>
+        </div>
+      </section>
+
       <section class="walkthrough wrap" id="walkthrough" aria-labelledby="walkthrough-title">
         <div class="section-heading">
           <h2 id="walkthrough-title">Follow one invoice<br />from email to evidence.</h2>
