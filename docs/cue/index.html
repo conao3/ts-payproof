@@ -230,9 +230,12 @@
       <section class="cue" id="step-1" aria-labelledby="heading-1">
         <div class="cue-heading"><span>0:00–0:20</span><span>1 / 7</span></div>
         <h2 id="heading-1">Hold</h2>
-        <p class="action" lang="ja">保留と0042／7719を示し、承認者の別窓へ。</p>
+        <p class="action" lang="ja">
+          Run invoice agent → 0042／7719の不一致・保留を表示 → 承認者の別窓へ。
+        </p>
         <p class="speech">
-          Now I will use the live app. The account is different, so this payment is on hold.
+          I start the invoice agent. It finds a different bank account and puts this payment on
+          hold.
         </p>
         <a class="next" href="#step-2">Next: Verify & approve <span aria-hidden="true">↓</span></a>
       </section>
@@ -309,7 +312,8 @@
       <details class="fallback">
         <summary>Stuck? Use the recording</summary>
         <p lang="ja">
-          約5秒で進まなければ連打しない。PCのスライドへ戻り、左でOverview、下で0秒へ。動画のコントロールで該当箇所へ移動して再生。
+          最初のRun invoice
+          agentは約8秒の実測なので15秒を目安に待つ。他の操作が約5秒で進まなければ連打しない。PCのスライドへ戻り、左でOverviewへ。動画のコントロールで該当箇所へ移動して再生。左右キーは動画のseekに使える。
         </p>
         <p class="speech">I'll show the recording of the same flow.</p>
         <p lang="ja">録画をライブ操作の成功と呼ばない。支払結果が不明なら別請求でやり直さない。</p>
@@ -317,7 +321,14 @@
       <details>
         <summary>Before starting</summary>
         <p lang="ja">
-          PCのoperator窓は左にスライド、右にアプリ。approverは独立認証の別窓。両方で同じ本番用LIVE請求を選ぶ。開始時は保留、CAD4,800、登録0042・要求7719。
+          デモ開始へ戻すときは、PCのリポジトリで
+          <code>./scripts/reset-demo.sh</code>
+          を実行。新しい未処理請求とoperator/approverの2窓へ戻る。Run invoice
+          agentは本人が押す。履歴・台帳は削除しない。
+        </p>
+        <p lang="ja">
+          PCのoperator窓は左にスライド、右にアプリ。approverは独立認証の別窓。両方で同じ本番用LIVE請求を選ぶ。開始時はメール受付済み・未処理。本人がRun
+          invoice agentを押し、処理後にCAD4,800、登録0042・要求7719の不一致と保留が表示される。
         </p>
         <p lang="ja">
           窓を戻したらF5。PCのCtrl+Tabでスライド→アプリ、Ctrl+Shift+Tabで戻る。別窓への切替を先に練習する。音量・投影・通知を確認。iPhoneはこのカンペの表示に使う。

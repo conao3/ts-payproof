@@ -169,7 +169,7 @@ function arrow(x, y, width) {
 
 const videoPanel = document.querySelector("#video-panel")
 const nextButton = document.querySelector("#next")
-const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=10"
+const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=11"
 video.src = videoSource
 video.poster = "assets/title-card.svg"
 video.muted = false
