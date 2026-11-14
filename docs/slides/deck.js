@@ -29,7 +29,7 @@ const slides = [
     video: "payment.mp4",
   },
   {
-    title: "Atlas links permission to each action and its result.",
+    title: "Summary: Atlas links permission, action, and evidence.",
     support: "The server checks live permissions and approved details before each action.",
     kind: "features",
     duration: 8,
