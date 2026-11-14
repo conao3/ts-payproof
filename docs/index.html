@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="PayProof checks supplier bank changes before invoice payments. See the workflow, screenshots, and video pitch from the MongoDB Toronto hackathon."
+    />
+    <meta name="theme-color" content="#193e35" />
+    <title>PayProof — Check the change before paying the invoice</title>
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="masthead wrap">
+      <a class="brand" href="./" aria-label="PayProof home"
+        ><svg viewBox="0 0 28 32" aria-hidden="true">
+          <path d="M14 2 25 7v10c0 7-11 13-11 13S3 24 3 17V7Z" />
+          <path d="m8 15 4 4 8-9" /></svg
+        >PayProof</a
+      >
+      <nav aria-label="Main navigation">
+        <a href="#workflow">How it works</a><a href="#walkthrough">Using PayProof</a
+        ><a href="https://github.com/conao3/ts-payproof">GitHub ↗</a
+        ><a class="nav-pitch" href="slides/">Open pitch slides ↗</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="intro wrap" aria-labelledby="intro-title">
+        <div class="intro-copy">
+          <p class="context">An invoice payment agent · Agents You Can Audit</p>
+          <h1 id="intro-title">Check the change before paying the invoice.</h1>
+          <p class="lead">
+            A supplier email asks a Canadian construction business to use a new bank account.
+            PayProof holds the payment until a separate person checks the saved supplier contact and
+            approves the exact details.
+          </p>
+          <div class="intro-actions">
+            <a class="button" href="slides/">Open pitch slides <span aria-hidden="true">↗</span></a
+            ><a class="text-link" href="#walkthrough"
+              >See the workflow <span aria-hidden="true">↓</span></a
+            >
+          </div>
+          <p class="scope">
+            Real language model and MongoDB Atlas.<br />Synthetic business data. Simulated payments.
+          </p>
+        </div>
+        <figure class="intro-shot">
+          <a
+            href="assets/bank-change.png"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open the bank-change hold screenshot at full size"
+            ><img
+              src="assets/bank-change.png"
+              alt="PayProof holds a CAD 4,800 invoice because the saved account ends in 0042 and the requested account ends in 7719."
+              width="1440"
+              height="810"
+              fetchpriority="high"
+          /></a>
+          <figcaption>
+            <strong>0042 <span aria-hidden="true">→</span> 7719</strong
+            ><span>A changed destination pauses the payment.</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="source-case wrap" aria-labelledby="source-title">
+        <div>
+          <p class="context">The Canadian Anti-Fraud Centre · May 13, 2026</p>
+          <h2 id="source-title">
+            CAD 3.5 million<br />recovered in one<br />payment-redirection case.
+          </h2>
+          <a
+            class="text-link"
+            href="https://antifraudcentre-centreantifraude.ca/news-nouvelles/2026/2026-05-13-eng.htm"
+            >Read the CAFC news release <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="case-copy">
+          <p>
+            The CAFC reported helping recover approximately CAD 3.5 million for a Quebec business
+            after criminals impersonated legitimate contacts and supplied false payment
+            instructions.
+          </p>
+          <p>
+            The same release identifies construction and contracting businesses among common
+            targets. It recommends checking payment instructions independently and confirming bank
+            changes through trusted contact information.
+          </p>
+          <div class="request-route">
+            <div><span>Incoming email</span><strong>New account: 7719</strong></div>
+            <span class="route-arrow" aria-hidden="true">→</span>
+            <div><span>Saved supplier record</span><strong>Account: 0042</strong></div>
+            <span class="route-arrow" aria-hidden="true">→</span>
+            <div class="route-stop"><strong>Hold</strong><span>Check the saved contact</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow wrap" id="workflow" aria-labelledby="workflow-title">
+        <div class="section-heading">
+          <h2 id="workflow-title">The email can propose.<br />Your team gives permission.</h2>
+          <p>
+            For the
+            <a href="https://cerebralvalley.ai/e/mongodb-toronto-hackathon/details"
+              >Agents You Can Audit</a
+            >
+            track, permission comes before action. MongoDB Atlas holds the identities, supplier and
+            policy revisions, verification, and approval used by the server to decide whether a
+            payment may run.
+          </p>
+        </div>
+        <div class="flow">
+          <div>
+            <span class="flow-dot" aria-hidden="true"></span>
+            <h3>Read the request</h3>
+            <p>
+              The model extracts the invoice and looks up the saved supplier. Email text can't
+              change the trusted contact or grant approval.
+            </p>
+          </div>
+          <div>
+            <span class="flow-dot" aria-hidden="true"></span>
+            <h3>Check and approve</h3>
+            <p>
+              A separately signed-in person checks the trusted contact, then approves the exact
+              invoice revision, amount, and destination. The server binds that permission to the
+              current supplier and policy revisions.
+            </p>
+          </div>
+          <div>
+            <span class="flow-dot" aria-hidden="true"></span>
+            <h3>Execute and check</h3>
+            <p>
+              A separate HTTP service records the simulated payment. PayProof matches its receipt to
+              the approved details and saves the result.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="walkthrough wrap" id="walkthrough" aria-labelledby="walkthrough-title">
+        <div class="section-heading">
+          <h2 id="walkthrough-title">Follow one invoice<br />from email to evidence.</h2>
+          <p>
+            These are actual screens from a synthetic demo for Maple Ridge Construction and Cedar
+            Supply Co. Open any screenshot to read it at full size.
+          </p>
+        </div>
+        <article class="walk-row">
+          <figure>
+            <a href="assets/invoice-email.png" target="_blank" rel="noopener"
+              ><img
+                src="assets/invoice-email.png"
+                alt="Invoice email requesting CAD 4,800 and a new bank account, with the Process invoice button."
+                width="1440"
+                height="810"
+                loading="lazy"
+            /></a>
+          </figure>
+          <div class="walk-copy">
+            <p class="step">1 · Finance operator</p>
+            <h3>Start with the supplier email.</h3>
+            <p>
+              Sign in as the operator, paste the invoice email, and choose
+              <strong>Process invoice</strong>. The model looks up the supplier and proposes the
+              payment.
+            </p>
+            <p>
+              This example asks for CAD 4,800, a new account ending in 7719, and an urgent payment.
+              The saved account ends in 0042, so the server puts it on hold.
+            </p>
+            <p class="detail">
+              When repeating a demo, change the invoice number. Duplicate supplier invoice numbers
+              are intentionally rejected.
+            </p>
+          </div>
+        </article>
+        <article class="walk-row">
+          <figure>
+            <a href="assets/saved-contact.png" target="_blank" rel="noopener"
+              ><img
+                src="assets/saved-contact.png"
+                alt="The payment approver records verification using the saved supplier contact Alex Chen and reviews the exact payment details."
+                width="1440"
+                height="810"
+                loading="lazy"
+            /></a>
+          </figure>
+          <div class="walk-copy">
+            <p class="step">2 · Separate payment approver</p>
+            <h3>Use the contact you already trust.</h3>
+            <p>
+              Sign in separately as the approver. Check the change through the saved supplier
+              contact, then choose <strong>Record verification</strong> and
+              <strong>Approve this payment</strong>.
+            </p>
+            <p>
+              The agent can't approve its own request. The email's replacement phone number doesn't
+              become the trusted contact.
+            </p>
+            <p class="detail">
+              The contact and confirmation shown here are a synthetic role-play. No phone call was
+              made.
+            </p>
+          </div>
+        </article>
+        <article class="walk-row">
+          <figure>
+            <a href="assets/approval-invalidated.png" target="_blank" rel="noopener"
+              ><img
+                src="assets/approval-invalidated.png"
+                alt="The invoice amount is CAD 4,900 at revision 2 and the bank-change hold returns after the old approval is invalidated."
+                width="1440"
+                height="810"
+                loading="lazy"
+            /></a>
+          </figure>
+          <div class="walk-copy">
+            <p class="step">3 · Change the payment details</p>
+            <h3>An approval has a precise target.</h3>
+            <div class="amount-change" aria-label="Amount changed from 4,800 to 4,900 dollars">
+              <span>$4,800</span><span aria-hidden="true">→</span><strong>$4,900</strong>
+            </div>
+            <p>
+              Use <strong>Amend payment details</strong> and save an amendment. Changing the amount
+              or destination clears the previous verification and approval.
+            </p>
+            <p>
+              The old revision can't be dispatched, even with a direct API request. The actual
+              server response in this demo was <q>Payment revision changed</q>.
+            </p>
+          </div>
+        </article>
+        <article class="evidence-row">
+          <figure>
+            <a href="assets/payment-confirmed.png" target="_blank" rel="noopener"
+              ><img
+                src="assets/payment-confirmed.png"
+                alt="The revised invoice is approved and its CAD 4,800 simulated payment is confirmed."
+                width="1440"
+                height="810"
+                loading="lazy"
+            /></a>
+            <figcaption>Fresh approval, then a matching receipt.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/decision-trail.png" target="_blank" rel="noopener"
+              ><img
+                src="assets/decision-trail.png"
+                alt="The decision trail shows approval invalidation, the denied old revision, independent verification, fresh approval, dispatch authorization, and payment confirmation."
+                width="1440"
+                height="810"
+                loading="lazy"
+            /></a>
+            <figcaption>The people, revisions, and decisions stay together.</figcaption>
+          </figure>
+          <div class="walk-copy">
+            <p class="step">4 · Execute and inspect</p>
+            <h3>Approve again.<br />Pay once.<br />Read the trail.</h3>
+            <p>
+              Return to the correct amount, record a fresh check, and approve. As the operator,
+              choose <strong>Run payment agent</strong>.
+            </p>
+            <p>
+              The demo produced <strong>1 simulated ledger entry</strong> and
+              <strong>13 recorded actions</strong>. The receipt matched the approved payment
+              details.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="underneath wrap" aria-labelledby="underneath-title">
+        <div>
+          <h2 id="underneath-title">Atlas keeps permission<br />and evidence in reach.</h2>
+          <p>
+            Invoice documents hold verification, approval, operation IDs, and the action timeline.
+            Separate collections store suppliers, identities, and denied security events.
+          </p>
+          <p>
+            Atomic updates keep invoice state and its timeline together. Before dispatch, a
+            transaction checks current authority and revisions. The simulator uses one ledger ID per
+            tenant and operation to prevent duplicate entries.
+          </p>
+          <a class="text-link" href="https://github.com/conao3/ts-payproof"
+            >Read the code and run locally <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="boundaries">
+          <h3>What you're looking at</h3>
+          <dl>
+            <div>
+              <dt>Real</dt>
+              <dd>
+                Tool-calling LLM, MongoDB Atlas, server-side permission checks, HTTP requests, and
+                receipt matching.
+              </dd>
+            </div>
+            <div>
+              <dt>Synthetic</dt>
+              <dd>Companies, invoices, contacts, and human confirmation records.</dd>
+            </div>
+            <div>
+              <dt>Simulated</dt>
+              <dd>
+                Payments recorded in a separate service. No bank connection, funds moved, or emails
+                sent.
+              </dd>
+            </div>
+          </dl>
+          <p class="detail">
+            This is an application-level audit trail. Database administrators can change stored
+            data; the demo doesn't claim tamper-proof records or complete fraud detection.
+          </p>
+        </div>
+      </section>
+
+      <section class="pitch-callout wrap" aria-labelledby="pitch-title">
+        <div>
+          <h2 id="pitch-title">See it as a six-slide pitch.</h2>
+          <p>
+            Embedded demo clips play without API calls. Right goes forward, left goes back, and down
+            restarts the current slide. Each clip holds its last frame, then loops.
+          </p>
+        </div>
+        <a class="button" href="slides/">Open pitch slides <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+    <footer class="wrap">
+      <p>PayProof · Built for Agents in Context Toronto, November 14, 2026.</p>
+      <a href="https://github.com/conao3/ts-payproof">Source · Apache-2.0 ↗</a>
+    </footer>
+  </body>
+</html>

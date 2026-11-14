@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PayProof — Pitch</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #10231e;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #stage {
+      position: relative;
+      width: min(100vw, 177.7778vh);
+      height: min(56.25vw, 100vh);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    video {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #source {
+      position: absolute;
+      right: 4%;
+      bottom: 2.1%;
+      font:
+        clamp(12px, 1.1vw, 24px) Arial,
+        sans-serif;
+      color: #587269;
+      text-underline-offset: 4px;
+    }
+    #source[hidden] {
+      display: none;
+    }
+    .back {
+      position: fixed;
+      right: 16px;
+      top: 12px;
+      color: #b9d3c6;
+      font:
+        14px Arial,
+        sans-serif;
+      text-decoration: none;
+      padding: 8px 12px;
+      background: #10231ecc;
+      border-radius: 4px;
+      z-index: 3;
+    }
+    .back:focus-visible {
+      outline: 2px solid #b6d19b;
+      outline-offset: 2px;
+    }
+  </style>
+  <a class="back" href="../">← PayProof</a>
+  <div id="stage">
+    <canvas id="screen" width="1920" height="1080" aria-label="PayProof presentation"></canvas>
+    <h1 class="sr" id="title">PayProof</h1>
+    <a
+      id="source"
+      href="https://antifraudcentre-centreantifraude.ca/news-nouvelles/2026/2026-05-13-eng.htm"
+      target="_blank"
+      rel="noopener"
+      >CAFC · May 13, 2026 ↗</a
+    >
+  </div>
+  <video id="video" muted playsinline preload="auto"></video>
+  <script type="module" src="deck.js"></script>
+</html>
