@@ -43,7 +43,7 @@
     "@graphql-codegen/cli": "^7.0.0",
     "@graphql-codegen/client-preset": "6.2.3",
     "@graphql-codegen/typescript": "6.1.2",
-    "@graphql-codegen/typescript-resolvers": "6.1.1",
+    "@graphql-codegen/typescript-resolvers": "7.0.0",
     "msw": "^3.0.0"
   }
 }
