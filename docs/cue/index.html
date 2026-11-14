@@ -226,10 +226,11 @@
     <header>
       <div class="name">
         <h1>PayProof · Live cues</h1>
-        <span class="duration">3 min</span>
+        <span class="duration">2 / 3 min</span>
       </div>
       <nav aria-label="Jump to demo step">
         <a href="#step-1" aria-label="Step 1: Hold">1</a
+        ><a href="#voice" aria-label="Voice question">V</a
         ><a href="#step-2" aria-label="Step 2: Verify & approve">2</a
         ><a href="#step-3" aria-label="Step 3: Change & reject">3</a
         ><a href="#step-4" aria-label="Step 4: Restore amount">4</a
@@ -241,23 +242,46 @@
     <main>
       <p class="intro" lang="ja">
         <strong>3分のライブ実演 → 2分の質疑</strong
-        >PCのスライドをDemoへ進め、アプリへ切り替えて3分を開始。1分動画の別枠上映は未確定。運営から案内された場合のみ上映する。操作を見せながら、英語の大きい文を読む。
+        >動画が別枠ならライブ3分。同じ枠なら動画1分＋ライブ2分。以下はライブ開始からの時刻。hold直後に音声質問。2分版では変更・再承認（手順3〜5）を省き、手順2から6へ進む。
       </p>
       <section class="cue" id="step-1" aria-labelledby="heading-1">
         <div class="cue-heading"><span>0:00–0:20</span><span>1 / 7</span></div>
         <h2 id="heading-1">Hold</h2>
         <p class="action" lang="ja">
-          Run invoice agent → 0042／7719の不一致・保留を表示 → 承認者の別窓へ。
+          Run invoice agent → 0042／7719の不一致・保留を表示 → 同じoperator画面で音声質問へ。
         </p>
         <p class="speech">
           I start the invoice agent. It finds a different bank account and puts this payment on
           hold.
         </p>
-        <a class="next" href="#step-2">Next: Verify & approve <span aria-hidden="true">↓</span></a>
+        <a class="next" href="#voice">Next: Voice question <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="voice" aria-labelledby="heading-voice">
+        <div class="cue-heading"><span>0:20–0:50 · both versions</span><span>Voice</span></div>
+        <h2 id="heading-voice">Ask ElevenLabs</h2>
+        <p class="action" lang="ja">
+          保留のまま Ask about this invoice → Record
+          question。マイクが録音中になったら、プレースホルダーと同じ次の英文を読む。
+        </p>
+        <p class="input-label" lang="ja">声で読む質問</p>
+        <p class="speech">Why is this payment held?</p>
+        <p class="action" lang="ja">
+          Stop and ask →
+          回答音声と画面の根拠を示す。自動再生されなければ再生ボタン。音声は説明だけで、承認・送金はしない。30秒枠を超えそうなら回答の表示だけ確認して次へ。
+        </p>
+        <p class="speech">
+          ElevenLabs handles speech. The answer uses Atlas evidence. Voice cannot approve or pay.
+        </p>
+        <a class="next" href="#step-2"
+          >Next: Verify &amp; approve <span aria-hidden="true">↓</span></a
+        >
       </section>
       <section class="cue" id="step-2" aria-labelledby="heading-2">
-        <div class="cue-heading"><span>0:20–0:45</span><span>2 / 7</span></div>
-        <h2 id="heading-2">Verify & approve</h2>
+        <div class="cue-heading"><span>0:50–1:10 · 2 min: until 1:20</span><span>2 / 7</span></div>
+        <h2 id="heading-2">Verify &amp; approve</h2>
+        <p class="action" lang="ja">
+          2分版は承認後、手順3〜5を省いて <a href="#step-6">Run paymentへ</a>。
+        </p>
         <p class="action" lang="ja">
           approverの別窓へ切替 → F5 → 同じ請求を選択。Evidence欄へ下の英文を入力する。
         </p>
@@ -279,7 +303,7 @@
         <a class="next" href="#step-3">Next: Change & reject <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-3" aria-labelledby="heading-3">
-        <div class="cue-heading"><span>0:45–1:10</span><span>3 / 7</span></div>
+        <div class="cue-heading"><span>1:10–1:30 · 3 min only</span><span>3 / 7</span></div>
         <h2 id="heading-3">Change & reject</h2>
         <p class="action" lang="ja">
           operatorへF5 → Amend payment details → 4900 → Save amendment → Try earlier approval。
@@ -291,7 +315,7 @@
         <a class="next" href="#step-4">Next: Restore amount <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-4" aria-labelledby="heading-4">
-        <div class="cue-heading"><span>1:10–1:25</span><span>4 / 7</span></div>
+        <div class="cue-heading"><span>1:30–1:40 · 3 min only</span><span>4 / 7</span></div>
         <h2 id="heading-4">Restore amount</h2>
         <p class="action" lang="ja">
           Amend payment details → 4800 → Save amendment → approver窓へF5。
@@ -300,7 +324,7 @@
         <a class="next" href="#step-5">Next: Approve again <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-5" aria-labelledby="heading-5">
-        <div class="cue-heading"><span>1:25–1:50</span><span>5 / 7</span></div>
+        <div class="cue-heading"><span>1:40–2:00 · 3 min only</span><span>5 / 7</span></div>
         <h2 id="heading-5">Approve again</h2>
         <p class="action" lang="ja">
           4,800へ戻した後、approverの別窓でF5 →
@@ -321,7 +345,7 @@
         <a class="next" href="#step-6">Next: Run payment <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-6" aria-labelledby="heading-6">
-        <div class="cue-heading"><span>1:50–2:15</span><span>6 / 7</span></div>
+        <div class="cue-heading"><span>2:00–2:15 · 2 min: 1:20–1:45</span><span>6 / 7</span></div>
         <h2 id="heading-6">Run payment</h2>
         <p class="action" lang="ja">operatorへF5 → Run payment agent → receiptとDecision trail。</p>
         <p class="speech">
@@ -331,8 +355,15 @@
         <a class="next" href="#step-7">Next: Summary <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-7" aria-labelledby="heading-7">
-        <div class="cue-heading"><span>2:15–3:00</span><span>7 / 7</span></div>
+        <div class="cue-heading"><span>2:15–3:00 · 2 min: 1:45–2:00</span><span>7 / 7</span></div>
         <h2 id="heading-7">Summary</h2>
+        <p class="action" lang="ja">
+          2分版は以下の短い締めだけ読む。3分版は下の図全体の原稿を読む。
+        </p>
+        <p class="speech">
+          The server checks every action. Atlas keeps the evidence. ElevenLabs explains it by voice.
+          Thank you.
+        </p>
         <p class="action" lang="ja">
           Summaryへ戻る。左上のLLM → 中央のserver → 下のhuman → 右上のpayment → 左下のAtlas →
           右下のElevenLabsを順に指して、図全体を説明する。
@@ -350,7 +381,7 @@
       <section id="finish">
         <h2>Finish on Summary</h2>
         <p lang="ja">
-          2:15にはスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
+          3分版は2:15、2分版は1:45にスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
         </p>
       </section>
       <details class="fallback">
