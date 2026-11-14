@@ -3,6 +3,8 @@ packages:
   - packages/*
 runtimeOnFail: ignore
 pmOnFail: ignore
+allowBuilds:
+  "@apollo/protobufjs": false
 overrides:
   vite: npm:@voidzero-dev/vite-plus-core@1.6.0
   postcss: 8.5.32
