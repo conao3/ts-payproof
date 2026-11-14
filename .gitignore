@@ -1,0 +1,9 @@
+node_modules/
+dist/
+result
+.env
+.env.*
+!.env.example
+.direnv/
+.vite-hooks/
+.claude-dev/

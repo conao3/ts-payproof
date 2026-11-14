@@ -1,0 +1,7 @@
+# AGENTS.md
+
+Build PayProof for the Agents You Can Audit hackathon track. Keep all business data synthetic. The payment service is simulated; the LLM and MongoDB Atlas must be real. Fail closed when required services are unavailable. Never log or commit secrets.
+
+Use the shared new-project-stack, TypeScript, and React Aria Components notes. React 19, React Aria Components, Tailwind CSS v4, Node 26, Hono, Apollo GraphQL, Zod, pnpm, vite-plus, and Nix are the standard stack. API endpoint: /api/graphql. Commit the schema.graphql SDL.
+
+Use English for code, UI, documentation, and commit messages. Run the documented check command before committing. Keep credentials and scratch artifacts untracked.
