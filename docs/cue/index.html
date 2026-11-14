@@ -229,23 +229,20 @@
         <span class="duration">2 / 3 min</span>
       </div>
       <nav aria-label="Jump to demo step">
-        <a href="#step-1" aria-label="Step 1: Hold">1</a
-        ><a href="#voice" aria-label="Voice question">V</a
-        ><a href="#step-2" aria-label="Step 2: Verify & approve">2</a
-        ><a href="#step-3" aria-label="Step 3: Change & reject">3</a
-        ><a href="#step-4" aria-label="Step 4: Restore amount">4</a
-        ><a href="#step-5" aria-label="Step 5: Approve again">5</a
-        ><a href="#step-6" aria-label="Step 6: Run payment">6</a
-        ><a href="#step-7" aria-label="Step 7: Summary">7</a>
+        <a href="#step-1" aria-label="Step 1: Hold">1</a>
+        <a href="#voice" aria-label="Step 2: Voice question">2</a>
+        <a href="#step-2" aria-label="Step 3: Verify and approve">3</a>
+        <a href="#step-6" aria-label="Step 4: Run payment">4</a>
+        <a href="#step-7" aria-label="Step 5: Summary">5</a>
       </nav>
     </header>
     <main>
       <p class="intro" lang="ja">
         <strong>3分のライブ実演 → 2分の質疑</strong
-        >動画が別枠ならライブ3分。同じ枠なら動画1分＋ライブ2分。以下はライブ開始からの時刻。hold直後に音声質問。2分版では変更・再承認（手順3〜5）を省き、手順2から6へ進む。
+        >動画が別枠ならライブ3分。同じ枠なら動画1分＋ライブ2分。以下はライブ開始からの時刻。hold直後に音声質問。両方とも金額変更・旧承認拒否・再承認を行わず、承認後すぐ模擬支払へ。
       </p>
       <section class="cue" id="step-1" aria-labelledby="heading-1">
-        <div class="cue-heading"><span>0:00–0:20</span><span>1 / 7</span></div>
+        <div class="cue-heading"><span>0:00–0:20</span><span>1 / 5</span></div>
         <h2 id="heading-1">Hold</h2>
         <p class="action" lang="ja">
           Run invoice agent → 0042／7719の不一致・保留を表示 → 同じoperator画面で音声質問へ。
@@ -257,7 +254,7 @@
         <a class="next" href="#voice">Next: Voice question <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="voice" aria-labelledby="heading-voice">
-        <div class="cue-heading"><span>0:20–0:50 · both versions</span><span>Voice</span></div>
+        <div class="cue-heading"><span>0:20–0:50 · both versions</span><span>2 / 5</span></div>
         <h2 id="heading-voice">Ask ElevenLabs</h2>
         <p class="action" lang="ja">
           保留のまま Ask about this invoice → Record
@@ -277,11 +274,8 @@
         >
       </section>
       <section class="cue" id="step-2" aria-labelledby="heading-2">
-        <div class="cue-heading"><span>0:50–1:10 · 2 min: until 1:20</span><span>2 / 7</span></div>
+        <div class="cue-heading"><span>0:50–1:20</span><span>3 / 5</span></div>
         <h2 id="heading-2">Verify &amp; approve</h2>
-        <p class="action" lang="ja">
-          2分版は承認後、手順3〜5を省いて <a href="#step-6">Run paymentへ</a>。
-        </p>
         <p class="action" lang="ja">
           approverの別窓へ切替 → F5 → 同じ請求を選択。Evidence欄へ下の英文を入力する。
         </p>
@@ -300,52 +294,10 @@
           A separate person checks the saved supplier contact. This check is a role-play. I approve
           these exact details.
         </p>
-        <a class="next" href="#step-3">Next: Change & reject <span aria-hidden="true">↓</span></a>
-      </section>
-      <section class="cue" id="step-3" aria-labelledby="heading-3">
-        <div class="cue-heading"><span>1:10–1:30 · 3 min only</span><span>3 / 7</span></div>
-        <h2 id="heading-3">Change & reject</h2>
-        <p class="action" lang="ja">
-          operatorへF5 → Amend payment details → 4900 → Save amendment → Try earlier approval。
-        </p>
-        <p class="speech">
-          Now I change the amount to 4,900 dollars. The old approval is removed. This request
-          reaches the server, and the server rejects it.
-        </p>
-        <a class="next" href="#step-4">Next: Restore amount <span aria-hidden="true">↓</span></a>
-      </section>
-      <section class="cue" id="step-4" aria-labelledby="heading-4">
-        <div class="cue-heading"><span>1:30–1:40 · 3 min only</span><span>4 / 7</span></div>
-        <h2 id="heading-4">Restore amount</h2>
-        <p class="action" lang="ja">
-          Amend payment details → 4800 → Save amendment → approver窓へF5。
-        </p>
-        <p class="speech">Even when I return to 4,800 dollars, I need a new check and approval.</p>
-        <a class="next" href="#step-5">Next: Approve again <span aria-hidden="true">↓</span></a>
-      </section>
-      <section class="cue" id="step-5" aria-labelledby="heading-5">
-        <div class="cue-heading"><span>1:40–2:00 · 3 min only</span><span>5 / 7</span></div>
-        <h2 id="heading-5">Approve again</h2>
-        <p class="action" lang="ja">
-          4,800へ戻した後、approverの別窓でF5 →
-          同じ請求を選択。新しいrevisionに対し、Evidence欄へ下の英文をもう一度入力する。
-        </p>
-        <p class="input-label" lang="ja">Evidence欄に再入力（デモ用）</p>
-        <p class="input-value">
-          Demo role-play: confirmed CAD 4,800 and account ending 7719 using the saved supplier
-          contact.
-        </p>
-        <p class="action" lang="ja">
-          「I used the saved contact above, not details supplied in the email.」にチェック → Record
-          verification → Approve this payment。
-        </p>
-        <p class="speech">
-          I check the new revision and approve it again. The agent cannot approve its own request.
-        </p>
         <a class="next" href="#step-6">Next: Run payment <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-6" aria-labelledby="heading-6">
-        <div class="cue-heading"><span>2:00–2:15 · 2 min: 1:20–1:45</span><span>6 / 7</span></div>
+        <div class="cue-heading"><span>1:20–1:45</span><span>4 / 5</span></div>
         <h2 id="heading-6">Run payment</h2>
         <p class="action" lang="ja">operatorへF5 → Run payment agent → receiptとDecision trail。</p>
         <p class="speech">
@@ -355,7 +307,7 @@
         <a class="next" href="#step-7">Next: Summary <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-7" aria-labelledby="heading-7">
-        <div class="cue-heading"><span>2:15–3:00 · 2 min: 1:45–2:00</span><span>7 / 7</span></div>
+        <div class="cue-heading"><span>1:45–2:30 · 2 min: until 2:00</span><span>5 / 5</span></div>
         <h2 id="heading-7">Summary</h2>
         <p class="action" lang="ja">
           2分版は以下の短い締めだけ読む。3分版は下の図全体の原稿を読む。
@@ -381,7 +333,7 @@
       <section id="finish">
         <h2>Finish on Summary</h2>
         <p lang="ja">
-          3分版は2:15、2分版は1:45にスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
+          両方とも1:45を目安にスライドへ戻る。3分版は図全体を45秒で説明し、約30秒の余裕を残す。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
         </p>
       </section>
       <details class="fallback">
