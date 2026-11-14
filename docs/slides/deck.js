@@ -3,40 +3,42 @@ const W = 1920,
   HOLD = 4
 const slides = [
   {
-    title: "Fake payment details. Real business risk.",
+    topic: "The business risk",
+    title: "Fake bank changes put real business payments at risk.",
+    support: "CAFC recommends checking bank changes through a trusted contact.",
     kind: "problem",
     duration: 8,
-    lines: ["A supplier email", "New payment details", "Where will the money go?"],
   },
   {
-    title: "The agent stops the bank change.",
+    topic: "Stop before payment",
+    title: "PayProof holds new bank details until a person checks them.",
+    support: "An email can request a new account. It cannot change saved details.",
     video: "hold.mp4",
-    lines: ["Saved account", "0042", "Requested account", "7719"],
-    note: "The email cannot approve its own request.",
   },
   {
-    title: "A person checks the saved contact.",
+    topic: "Independent human approval",
+    title: "Only a separate person can approve the exact payment.",
+    support: "A saved contact checks the change; a separate approver decides.",
     video: "review.mp4",
-    lines: ["Saved supplier contact", "Alex Chen", "Check the change", "Approve this payment"],
-    note: "The person has a separate account.",
   },
   {
-    title: "A change cancels the old approval.",
+    topic: "Approval follows the details",
+    title: "Changing the payment removes the old approval.",
+    support: "The server rejects the old approval before any payment can run.",
     video: "change.mp4",
-    lines: ["4,800 → 4,900", "Previous approval", "Payment revision changed"],
-    note: "The server checks before any payment.",
   },
   {
-    title: "A new approval allows the action.",
+    topic: "Execute the approved action",
+    title: "The agent records only the payment a person approved.",
+    support: "Fresh approval, one ledger entry, and a receipt that matches.",
     video: "payment.mp4",
-    lines: ["CAD 4,800", "New approval", "One simulated payment"],
-    note: "The receipt must match the approved details.",
   },
   {
-    title: "Atlas keeps the proof of each action.",
+    topic: "Agents You Can Audit",
+    title: "Atlas links permission to each action and its result.",
+    support: "Saved identities, exact approval, and an audit trail stay connected.",
     kind: "features",
     duration: 8,
-    lines: ["Hold bank changes", "Approve the exact payment", "Keep the full decision trail"],
   },
 ]
 const canvas = document.querySelector("#screen"),
@@ -278,102 +280,100 @@ function draw(now) {
   diag.remaining = Math.max(0, duration + HOLD - elapsed)
   ctx.fillStyle = "#f5f8f5"
   ctx.fillRect(0, 0, W, H)
-  text(slide.title, 64, 120, 65, "#193e35", 700)
+  text(slide.topic, 64, 68, 30, "#587269")
+  wrap(slide.title, 64, 156, 1792, 64, "#193e35", 700)
+  text(slide.support, 64, 333, 40, "#193e35")
   if (slide.kind === "problem") {
-    text("About CAD 3.5M", 80, 295, 100, "#193e35", 700)
-    text("recovered in one Quebec payment-redirection case", 80, 372, 44)
-    text("Construction firms are among the common targets.", 80, 450, 36, "#587269")
-    const boxes = [
-      { x: 80, t: "Fake email", sub: "New payment details" },
-      { x: 710, t: "New account", sub: "Requested destination changed" },
-      { x: 1340, t: "Payment at risk", sub: "Check before sending" },
+    text("About CAD 3.5M", 64, 500, 94, "#193e35", 700)
+    wrap("recovered in a payment-redirection case at one Quebec business.", 64, 578, 900, 40)
+    wrap("CAFC also lists construction firms as common targets.", 64, 740, 900, 40)
+    text("The case's industry was not stated.", 64, 922, 38, "#587269")
+    const flow = [
+      { y: 410, title: "Fake email", detail: "A criminal acts as a known contact." },
+      { y: 590, title: "New bank details", detail: "The email asks for another account." },
+      { y: 770, title: "Business payment", detail: "Check the change before sending." },
     ]
-    boxes.forEach((b, i) => {
+    flow.forEach((item, i) => {
       ctx.fillStyle = i === 1 ? "#f1dfc3" : "#dbe8e0"
-      ctx.fillRect(b.x, 550, 500, 200)
-      text(b.t, b.x + 30, 615, 42, "#193e35", 700)
-      wrap(b.sub, b.x + 30, 688, 430, 33)
-      if (i < 2) arrow(b.x + 520, 650, 90)
+      ctx.fillRect(1060, item.y, 796, 140)
+      text(item.title, 1090, item.y + 51, 42, "#193e35", 700)
+      text(item.detail, 1090, item.y + 109, 38)
+      if (i < 2) text("↓", 1420, item.y + 177, 42, "#799489")
     })
-    const p = Math.min(1, active / 6)
-    ctx.fillStyle = "#b77724"
-    ctx.beginPath()
-    ctx.arc(130 + 1530 * p, 800, 12, 0, Math.PI * 2)
-    ctx.fill()
-    text("CAFC advice: check bank changes through a trusted contact.", 80, 925, 39)
-    text("PayProof puts that check before the payment.", 80, 995, 35, "#587269")
+    text("Source: Canadian Anti-Fraud Centre, May 13, 2026", 64, 1035, 28, "#587269")
   } else if (slide.kind === "features") {
-    text("Agents You Can Audit", 80, 205, 34, "#587269")
     const layers = [
-      { x: 80, title: "Who can act?", line1: "Saved identities", line2: "Human + agent roles" },
+      { x: 64, title: "Who can act?", a: "Saved identities", b: "Human and agent roles" },
       {
-        x: 710,
+        x: 700,
         title: "What is allowed?",
-        line1: "Policy + exact approval",
-        line2: "Invoice amount + account",
+        a: "Policy + exact approval",
+        b: "Amount, account, revision",
       },
-      {
-        x: 1340,
-        title: "What happened?",
-        line1: "State + audit trail",
-        line2: "Actor, reason + receipt",
-      },
+      { x: 1336, title: "What happened?", a: "State + audit events", b: "Actor, reason, receipt" },
     ]
-    layers.forEach((b, i) => {
+    layers.forEach((layer, i) => {
       ctx.fillStyle = "#dbe8e0"
-      ctx.fillRect(b.x, 290, 500, 300)
-      text(b.title, b.x + 28, 355, 41, "#193e35", 700)
-      wrap(b.line1, b.x + 28, 447, 440, 37)
-      wrap(b.line2, b.x + 28, 525, 440, 30, "#587269")
-      if (i < 2) arrow(b.x + 520, 440, 90)
+      ctx.fillRect(layer.x, 430, 520, 340)
+      text(layer.title, layer.x + 28, 495, 40, "#193e35", 700)
+      text(layer.a, layer.x + 28, 590, 38)
+      text(layer.b, layer.x + 28, 675, 38)
+      if (i === 2) text("13 actions · 1 mock entry", layer.x + 28, 744, 38)
+      if (i < 2) arrow(layer.x + 536, 600, 78)
     })
     ctx.fillStyle = "#193e35"
-    ctx.fillRect(80, 680, 1760, 110)
+    ctx.fillRect(64, 815, 1792, 80)
     text(
-      "Before dispatch: live permissions + the exact approved details",
-      115,
-      750,
-      43,
+      "Before action, the server checks live authority and the approved details.",
+      94,
+      870,
+      40,
       "#f5f8f5",
       600,
     )
-    text("1 simulated ledger entry", 80, 890, 38, "#193e35", 700)
-    text("13 recorded actions", 1070, 890, 38)
+    text("Permission before action. Evidence after action.", 64, 965, 40, "#193e35", 700)
     disclosure()
   } else {
     ctx.fillStyle = "#fff"
-    ctx.fillRect(64, 224, 1270, 714)
-    if (video.readyState >= 2) ctx.drawImage(video, 64, 224, 1270, 714)
-    else text("Preparing the demo…", 130, 570, 38)
-    line(1370, 224, 1370, 938)
-    const x = 1425
+    ctx.fillRect(64, 410, 960, 540)
+    if (video.readyState >= 2) ctx.drawImage(video, 64, 410, 960, 540)
+    else text("Preparing the demo…", 130, 650, 38)
+    line(1052, 410, 1052, 965)
+    const x = 1090
     if (index === 1) {
-      text(slide.lines[0], x, 335, 30, "#587269")
-      text(slide.lines[1], x, 415, 68, "#193e35", 700)
-      text(slide.lines[2], x, 545, 30, "#587269")
-      text(slide.lines[3], x, 625, 68, "#a66b20", 700)
+      text("Saved supplier account", x, 460, 40)
+      text("0042", x, 548, 72, "#193e35", 700)
+      text("Requested by the email", x, 650, 40)
+      text("7719", x, 738, 72, "#a66b20", 700)
+      line(x, 790, 1856, 790)
+      text("Payment is on hold.", x, 856, 44, "#193e35", 700)
+      text("A separate person must check the account.", x, 930, 38)
     }
     if (index === 2) {
-      text("Saved contact", x, 325, 32, "#587269")
-      text("Alex Chen", x, 400, 46, "#193e35", 700)
-      text("↓", x + 150, 510, 48, "#799489")
-      wrap("Human check", x, 610, 400, 42)
-      wrap("Exact payment approval", x, 735, 400, 42, "#193e35", 700)
+      text("Saved supplier contact: Alex Chen", x, 470, 40)
+      text("Independent check of the change", x, 572, 40)
+      text("↓", x + 340, 652, 42, "#799489")
+      text("Separate approver account", x, 730, 42, "#193e35", 700)
+      text("CAD 4,800 → account ending 7719", x, 812, 40)
+      text("The demo check is a role-play.", x, 930, 38, "#a66b20")
     }
     if (index === 3) {
-      text("4,800 → 4,900", x, 375, 46, "#193e35", 700)
-      text("Previous approval", x, 505, 33, "#587269")
-      line(x, 493, x + 295, 493, "#587269", 3)
-      line(x, 570, 1835, 570, "#bc893e", 3)
-      wrap("“Payment revision changed”", x, 650, 400, 37, "#a66b20")
+      text("CAD 4,800 → 4,900", x, 498, 60, "#193e35", 700)
+      text("Previous approval", x, 612, 42, "#587269")
+      line(x, 598, x + 343, 598, "#587269", 3)
+      text("Approval removed", x, 720, 44, "#193e35", 700)
+      text("“Payment revision changed”", x, 820, 40, "#a66b20")
+      text("New details need new approval.", x, 930, 38)
     }
     if (index === 4) {
-      text("CAD 4,800", x, 345, 50, "#193e35", 700)
-      text("New approval", x, 490, 38)
-      text("↓", x + 150, 590, 48, "#799489")
-      wrap("One simulated payment", x, 700, 400, 42, "#193e35", 700)
+      text("New approval: CAD 4,800", x, 470, 44, "#193e35", 700)
+      text("Destination: account ending 7719", x, 550, 40)
+      text("↓", x + 340, 630, 42, "#799489")
+      text("One simulated ledger entry", x, 710, 44, "#193e35", 700)
+      text("Receipt matches this payment.", x, 812, 40)
+      text("A separate HTTP service records it.", x, 930, 38)
     }
-    text(slide.note, 64, 1018, 31, "#587269")
+    disclosure()
   }
   ctx.fillStyle = "#799489"
   ctx.fillRect(0, 0, W, 6)
@@ -388,12 +388,11 @@ function draw(now) {
   }
 }
 function disclosure() {
-  text("Real LLM + Atlas", 80, 980, 28, "#587269")
   text(
-    "Synthetic business data and verification · Simulated payments · Recorded demo, waits omitted",
-    80,
+    "Real LLM + Atlas · Synthetic data and human check · Simulated payment · Recorded demo",
+    64,
     1035,
-    27,
+    28,
     "#587269",
   )
 }
