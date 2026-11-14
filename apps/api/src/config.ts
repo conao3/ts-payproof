@@ -12,6 +12,10 @@ const configSchema = z.object({
   OPERATOR_ACCESS_KEY: z.string().min(16),
   APPROVER_ACCESS_KEY: z.string().min(16),
   APP_ORIGIN: z.url(),
+  ELEVENLABS_API_KEY: z.string().min(1).optional(),
+  ELEVENLABS_VOICE_ID: z.string().min(1).max(100).optional(),
+  ELEVENLABS_STT_MODEL: z.string().min(1).optional(),
+  ELEVENLABS_TTS_MODEL: z.string().min(1).optional(),
 })
 export type Config = z.infer<typeof configSchema>
 export function readConfig(): Config {

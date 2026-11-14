@@ -47,6 +47,7 @@ import {
 } from "./graphql/generated/graphql"
 import { getFragmentData } from "./graphql/generated/fragment-masking"
 import "./style.css"
+import { VoicePanel } from "./voice-panel.tsx"
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: "/api/graphql", credentials: "same-origin" }),
@@ -684,6 +685,10 @@ function Workspace({
                     </DisclosurePanel>
                   </Disclosure>
                 )}
+              <VoicePanel
+                key={`${invoice.id}:${invoice.revision}:${invoice.status}`}
+                invoiceId={invoice.id}
+              />
               <section className="audit-section">
                 <div className="section-title">
                   <h2>Decision trail</h2>

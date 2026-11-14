@@ -45,18 +45,28 @@ The server initializes validation rules, indexes and synthetic demo principals/s
 
 ### Environment contract
 
-| Variable                                     | Purpose                                                                                                    |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `MONGODB_URI`, `MONGODB_DB`                  | Application database in the event's Atlas Sandbox                                                          |
-| `PAYMENT_MONGODB_URI`, `PAYMENT_MONGODB_DB`  | Simulated ledger database; provision a separate database credential for isolation                          |
-| `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`   | OpenAI-compatible `/chat/completions` endpoint with function tools; base URL includes `/v1` where required |
-| `MOCK_PAYMENT_API_URL`                       | Private ledger GraphQL URL                                                                                 |
-| `PAYMENT_API_KEY`                            | Shared private authorization key between application and ledger                                            |
-| `SESSION_SIGNING_KEY`                        | Signs expiring server-issued session cookies                                                               |
-| `OPERATOR_ACCESS_KEY`, `APPROVER_ACCESS_KEY` | Different private keys for the two human demo identities                                                   |
-| `APP_ORIGIN`                                 | Exact browser origin for request validation and cookie security                                            |
+| Variable                                       | Purpose                                                                                                        |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `MONGODB_URI`, `MONGODB_DB`                    | Application database in the event's Atlas Sandbox                                                              |
+| `PAYMENT_MONGODB_URI`, `PAYMENT_MONGODB_DB`    | Simulated ledger database; provision a separate database credential for isolation                              |
+| `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`     | OpenAI-compatible `/chat/completions` endpoint with function tools; base URL includes `/v1` where required     |
+| `MOCK_PAYMENT_API_URL`                         | Private ledger GraphQL URL                                                                                     |
+| `PAYMENT_API_KEY`                              | Shared private authorization key between application and ledger                                                |
+| `SESSION_SIGNING_KEY`                          | Signs expiring server-issued session cookies                                                                   |
+| `OPERATOR_ACCESS_KEY`, `APPROVER_ACCESS_KEY`   | Different private keys for the two human demo identities                                                       |
+| `APP_ORIGIN`                                   | Exact browser origin for request validation and cookie security                                                |
+| `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`    | Optional server-only credentials for voice transcription and spoken answers; omit to use typed audit questions |
+| `ELEVENLABS_STT_MODEL`, `ELEVENLABS_TTS_MODEL` | Optional voice model IDs; defaults are `scribe_v2` and `eleven_multilingual_v2`                                |
 
 Only the API process receives the model key. The language model receives a restricted supplier-lookup tool and a payment-proposal tool; it never receives database credentials, a payment-service key, a human session or an approval tool. Requests and responses at external boundaries are validated with Zod.
+
+### Read-only voice questions
+
+On an invoice, record a question (up to 20 seconds) or type one. ElevenLabs transcribes recordings, the existing configured language model explains permitted Atlas records with validated evidence references, and ElevenLabs generates the spoken answer. The screen shows the transcript, answer, supporting records, invoice revision and observation time. Microphone recording requires HTTPS or localhost and browser permission. Missing voice configuration is shown explicitly; typed questions still return real model answers and Atlas evidence. A synthesis failure preserves the text answer and reports that audio is unavailable.
+
+The voice service receives only `principal` and `get` database capabilities. It checks the signed human session, enabled identity and invoice tenant before any provider request, then checks authority and snapshot freshness again before returning an answer. Its only model tool returns a cited explanation. It cannot verify, approve, amend, cancel or dispatch a payment, even when the spoken question requests those actions. Those actions remain in the existing authorized controls. Raw recordings are forwarded for transcription and are not stored by PayProof. The model receives the question and a bounded evidence snapshot, not the original invoice email, browser cookie or credentials. Only the answer text is sent for speech synthesis; provider retention follows the configured service account's terms.
+
+Adapters follow the official [ElevenLabs speech-to-text](https://elevenlabs.io/docs/api-reference/speech-to-text/convert) and [text-to-speech](https://elevenlabs.io/docs/api-reference/text-to-speech/convert) APIs. Provider mocks verify the protocol and permission boundaries; a real-key smoke test is a separate validation step.
 
 For the built application, set `APP_ORIGIN=http://127.0.0.1:4100` and run:
 

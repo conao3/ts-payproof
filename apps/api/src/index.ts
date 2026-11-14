@@ -10,6 +10,7 @@ import { createStore, initializeDatabase, seedDatabase } from "./store.ts"
 import { readSession } from "./auth.ts"
 import { createResolvers, typeDefs, type GraphQLContext } from "./graphql.ts"
 import { preserveHonoHeaders } from "./http-handler.ts"
+import { createVoiceRoutes } from "./voice-http.ts"
 
 const config = readConfig()
 const client = new MongoClient(config.MONGODB_URI, { serverSelectionTimeoutMS: 15_000 })
@@ -57,6 +58,7 @@ const graphqlHandler = startServerAndCreateHonoHandler(
   },
 )
 app.on(["GET", "POST"], "/api/graphql", preserveHonoHeaders(graphqlHandler))
+app.route("/api/voice", createVoiceRoutes({ principal: store.principal, get: store.get }, config))
 app.use("/*", serveStatic({ root: "./dist/web" }))
 app.get("*", serveStatic({ path: "./dist/web/index.html" }))
 serve({ fetch: app.fetch, port: 4100, hostname: "127.0.0.1" })
