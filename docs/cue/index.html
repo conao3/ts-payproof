@@ -248,7 +248,7 @@
           Run invoice agent → 0042／7719の不一致・保留を表示 → 同じoperator画面で音声質問へ。
         </p>
         <p class="speech">
-          I start the invoice agent. It finds a different bank account and puts this payment on
+          I start the invoice agent. It finds a different bank account mail and puts this payment on
           hold.
         </p>
         <a class="next" href="#voice">Next: Voice question <span aria-hidden="true">↓</span></a>
@@ -266,9 +266,7 @@
           Stop and ask →
           回答音声と画面の根拠を示す。自動再生されなければ再生ボタン。音声は説明だけで、承認・送金はしない。30秒枠を超えそうなら回答の表示だけ確認して次へ。
         </p>
-        <p class="speech">
-          ElevenLabs handles speech. The answer uses Atlas evidence. Voice cannot approve or pay.
-        </p>
+        <p class="speech">ElevenLabs handles speech. The answer uses Atlas evidence.</p>
         <a class="next" href="#step-2"
           >Next: Verify &amp; approve <span aria-hidden="true">↓</span></a
         >
@@ -291,8 +289,8 @@
           この実演では合成ロールプレイとして記録する。
         </p>
         <p class="speech">
-          A separate person checks the saved supplier contact. This check is a role-play. I approve
-          these exact details.
+          A separate person checks the saved supplier contact. This check is a role-play so I
+          approve these exact details.
         </p>
         <a class="next" href="#step-6">Next: Run payment <span aria-hidden="true">↓</span></a>
       </section>
@@ -301,8 +299,7 @@
         <h2 id="heading-6">Run payment</h2>
         <p class="action" lang="ja">operatorへF5 → Run payment agent → receiptとDecision trail。</p>
         <p class="speech">
-          Now the agent can run the payment. This is a separate payment simulator. No real money
-          moves. Atlas records the approval and result.
+          Now the agent can run the payment. Atlas records the approval and result.
         </p>
         <a class="next" href="#step-7">Next: Summary <span aria-hidden="true">↓</span></a>
       </section>
@@ -322,12 +319,14 @@
         </p>
         <p class="speech">
           The model reads the invoice on the left. The server checks roles and payment details in
-          Atlas, in a transaction. A separate person verifies and approves the exact payment. The
-          server then calls the payment simulator and checks its receipt. Atlas stores identities,
-          approvals, state and history. State and history change together. One payment ID prevents
-          duplicates. On the right, ElevenLabs turns speech into text and reads answers from Atlas
-          evidence. Voice can explain payments, but cannot approve or send them. MongoDB Atlas and
-          ElevenLabs made it easy to build this complex workflow in a single day. Thank you.
+          Atlas, in a transaction. A separate person verifies and approves the exact payment. <br />
+          The server then calls the payment simulator and checks its receipt. <br />
+          Atlas stores identities, approvals, state and history. <br />
+          One payment ID prevents duplicates. <br />
+          On the right, ElevenLabs turns speech into text and reads answers from Atlas evidence.
+          <br />
+          MongoDB Atlas and ElevenLabs made it easy to build this complex workflow in a single day.
+          Thank you.
         </p>
         <a class="next" href="#finish">Finish <span aria-hidden="true">↓</span></a>
       </section>
