@@ -7,7 +7,8 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  font-size: 14px;
+  font-size: 18px;
+  line-height: 1.5;
 }
 * {
   box-sizing: border-box;
@@ -51,13 +52,13 @@ p {
   margin-top: 0;
 }
 h1 {
-  font-size: 32px;
+  font-size: 38px;
   letter-spacing: -1.1px;
   font-weight: 600;
   line-height: 1.2;
 }
 h2 {
-  font-size: 17px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.3px;
 }
@@ -76,7 +77,7 @@ textarea {
 }
 label {
   display: block;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -84,7 +85,7 @@ label {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.8px;
   color: #173d38;
@@ -116,7 +117,7 @@ label {
 .primary {
   background: #173d38;
   color: #fff;
-  min-height: 42px;
+  min-height: 48px;
   padding: 11px 17px;
 }
 .primary:hover {
@@ -125,7 +126,7 @@ label {
 .secondary {
   background: #fff;
   border: 1px solid #bccac0;
-  min-height: 39px;
+  min-height: 46px;
   padding: 9px 14px;
   color: #25463c;
 }
@@ -159,10 +160,10 @@ label {
 .quiet,
 .subtle {
   color: #748078;
-  font-size: 12px;
+  font-size: 16px;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: 16px;
   letter-spacing: 1.1px;
   font-weight: 600;
 }
@@ -188,13 +189,13 @@ label {
   min-height: 100vh;
 }
 .login-story h1 {
-  font-size: 43px;
+  font-size: 48px;
   line-height: 1.2;
   letter-spacing: -1.7px;
   margin: 22px 0;
 }
 .login-story > div p:not(.eyebrow) {
-  font-size: 18px;
+  font-size: 22px;
   color: #617368;
 }
 .login-form {
@@ -204,14 +205,14 @@ label {
   padding: 50px;
 }
 .login-card {
-  max-width: 350px;
+  max-width: 430px;
 }
 .login-card > svg {
   color: #547967;
   margin-bottom: 20px;
 }
 .login-card h2 {
-  font-size: 25px;
+  font-size: 30px;
 }
 .login-card > p {
   color: #6d7b70;
@@ -223,7 +224,7 @@ label {
   margin-top: 16px;
 }
 .demo-note {
-  font-size: 11px;
+  font-size: 16px;
   line-height: 1.7;
   margin-top: 26px;
 }
@@ -233,7 +234,7 @@ label {
   flex-direction: column;
 }
 .app-header {
-  height: 76px;
+  min-height: 84px;
   padding: 0 36px;
   display: flex;
   align-items: center;
@@ -242,7 +243,7 @@ label {
   gap: 50px;
 }
 .organization {
-  font-size: 13px;
+  font-size: 17px;
   color: #44564c;
 }
 .organization > span:last-child {
@@ -257,7 +258,7 @@ label {
   display: flex;
   gap: 10px;
   align-items: center;
-  font-size: 12px;
+  font-size: 16px;
   color: #596a60;
 }
 .avatar {
@@ -270,14 +271,14 @@ label {
   justify-content: center;
   background: #eff4ed;
   color: #315243;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
 }
 .workspace {
   display: grid;
-  grid-template-columns: 290px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
   flex: 1;
-  max-width: 1600px;
+  max-width: 1800px;
   width: 100%;
   margin: 0 auto;
 }
@@ -296,14 +297,14 @@ label {
 }
 .sidebar-heading .eyebrow {
   color: #829184;
-  font-size: 9px;
+  font-size: 14px;
 }
 .sidebar h2 {
-  font-size: 20px;
+  font-size: 26px;
   margin: 8px 0;
 }
 .sidebar h2 span {
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 400;
   color: #849084;
   margin-left: 5px;
@@ -315,7 +316,7 @@ label {
 .queue-summary {
   padding: 4px 10px 25px;
   color: #859085;
-  font-size: 11px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -349,16 +350,19 @@ label {
   box-shadow: 0 2px 3px #152e1710;
 }
 .row-title {
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
 }
 .row-subtitle {
   display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 16px;
   color: #819082;
   margin: 8px 0 11px;
 }
@@ -375,7 +379,7 @@ label {
   background: #3d825c;
 }
 .status-text {
-  font-size: 10px;
+  font-size: 14px;
   color: #78897b;
 }
 .status-text.awaiting_verification {
@@ -391,16 +395,16 @@ label {
   gap: 7px;
   align-items: center;
   color: #8a978b;
-  font-size: 11px;
+  font-size: 16px;
 }
 .work-area {
-  padding: 45px 6vw 70px;
+  padding: 40px clamp(28px, 4vw, 64px) 70px;
   min-width: 0;
   background: white;
-  max-width: 1160px;
+  max-width: 1400px;
 }
 .section-kicker {
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 1px;
   font-weight: 600;
   color: #809082;
@@ -411,30 +415,31 @@ label {
 }
 .invoice-heading {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
   align-items: center;
   margin-bottom: 30px;
 }
 .invoice-heading h1 {
-  font-size: 30px;
+  font-size: 36px;
   margin-bottom: 8px;
 }
 .invoice-date {
-  font-size: 11px;
+  font-size: 16px;
   color: #819083;
   margin-bottom: 0;
 }
 .invoice-total {
   text-align: right;
-  font-size: 29px;
+  font-size: 36px;
   letter-spacing: -1px;
   font-weight: 500;
   white-space: nowrap;
 }
 .invoice-total span {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0;
   color: #8b968b;
   margin-top: 7px;
@@ -455,10 +460,10 @@ label {
   margin-top: 1px;
 }
 .status-banner strong {
-  font-size: 13px;
+  font-size: 17px;
 }
 .status-banner p {
-  font-size: 12px;
+  font-size: 16px;
   margin: 5px 0 0;
   color: #7b8575;
   line-height: 1.55;
@@ -474,7 +479,7 @@ label {
   color: #336642;
 }
 .banner-label {
-  font-size: 8px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.9px;
   white-space: nowrap;
@@ -495,7 +500,7 @@ label {
 }
 .section-title > span {
   color: #8b9689;
-  font-size: 10px;
+  font-size: 14px;
 }
 .payment-details {
   margin-bottom: 30px;
@@ -513,14 +518,14 @@ label {
   border-left: 1px solid #e0e5dc;
 }
 .field-label {
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.6px;
   color: #8c998a;
 }
 .account {
   font-family: ui-monospace, "SFMono-Regular", monospace;
-  font-size: 19px;
+  font-size: 24px;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
@@ -535,7 +540,7 @@ label {
 }
 .change-label {
   font-family: "Helvetica Neue", Arial, sans-serif;
-  font-size: 9px;
+  font-size: 14px;
   background: #f6e8cb;
   color: #a57631;
   border-radius: 3px;
@@ -543,13 +548,13 @@ label {
   letter-spacing: 0;
 }
 .detail-grid .subtle {
-  font-size: 10px;
+  font-size: 14px;
 }
 .disclosure-trigger {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 16px;
   color: #627a67;
   border: 0;
   background: transparent;
@@ -560,7 +565,7 @@ label {
 }
 .source-email {
   font:
-    11px/1.8 ui-monospace,
+    16px/1.8 ui-monospace,
     monospace;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -571,7 +576,7 @@ label {
   color: #63735d;
 }
 .agent-reason {
-  font-size: 11px;
+  font-size: 16px;
   color: #7c8a75;
   padding: 0 5px;
 }
@@ -596,18 +601,18 @@ label {
   color: #55735b;
 }
 .saved-contact strong {
-  font-size: 12px;
+  font-size: 16px;
 }
 .saved-contact p {
-  font-size: 12px;
+  font-size: 16px;
   margin: 5px 0 3px;
 }
 .saved-contact span:not(.contact-icon) {
   color: #939d8e;
-  font-size: 10px;
+  font-size: 14px;
 }
 .instruction {
-  font-size: 12px;
+  font-size: 16px;
   color: #7b8875;
   margin: 15px 0;
   line-height: 1.7;
@@ -616,13 +621,13 @@ label {
   margin-top: 25px;
 }
 .verify-form label {
-  font-size: 12px;
+  font-size: 16px;
 }
 .verify-form textarea {
-  font-size: 12px;
+  font-size: 16px;
 }
 .checkbox {
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 400;
   display: flex;
   gap: 8px;
@@ -648,7 +653,7 @@ label {
   color: white;
 }
 .verification-record {
-  font-size: 12px;
+  font-size: 16px;
   background: #f7faf3;
   padding: 15px 18px;
   border-left: 2px solid #9cb690;
@@ -658,7 +663,7 @@ label {
   margin: 0 0 8px;
 }
 .verification-record > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #8d9b84;
 }
 .section-title .verified {
@@ -677,7 +682,7 @@ label {
   padding: 20px 0;
 }
 .actions p {
-  font-size: 12px;
+  font-size: 16px;
   color: #829079;
   margin: 0;
 }
@@ -688,12 +693,12 @@ label {
   flex-wrap: wrap;
 }
 .approval-summary {
-  font-size: 11px;
+  font-size: 16px;
   color: #658358;
   display: flex;
   align-items: center;
   gap: 6px;
-  max-width: 270px;
+  max-width: 360px;
   line-height: 1.5;
 }
 .amend-disclosure {
@@ -709,14 +714,14 @@ label {
   flex: 1;
 }
 .amend-fields label {
-  font-size: 11px;
+  font-size: 16px;
 }
 .amend-fields input {
-  font-size: 12px;
+  font-size: 16px;
   padding: 10px;
 }
 .amend-fields button {
-  font-size: 11px;
+  font-size: 16px;
 }
 .receipt {
   display: flex;
@@ -729,27 +734,27 @@ label {
   color: #4b703b;
 }
 .receipt h2 {
-  font-size: 14px;
+  font-size: 22px;
   margin-bottom: 6px;
 }
 .receipt p {
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 6px;
 }
 .receipt code {
-  font-size: 9px;
+  font-size: 14px;
   overflow-wrap: anywhere;
   opacity: 0.7;
 }
 .receipt .subtle {
-  font-size: 10px;
+  font-size: 14px;
   margin: 10px 0 0;
 }
 .audit-section {
   margin-top: 32px;
 }
 .audit-section h2 {
-  font-size: 15px;
+  font-size: 20px;
 }
 .timeline {
   padding: 0;
@@ -781,29 +786,30 @@ label {
 }
 .event-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 15px;
   align-items: center;
 }
 .event-header strong {
   font-weight: 500;
-  font-size: 11px;
+  font-size: 16px;
   text-transform: capitalize;
   color: #4c6243;
 }
 .event-header time {
-  font-size: 9px;
+  font-size: 14px;
   color: #a0aa97;
   white-space: nowrap;
 }
 .timeline p {
-  font-size: 11px;
+  font-size: 16px;
   color: #819076;
   margin: 6px 0 5px;
   line-height: 1.6;
 }
 .event-actor {
-  font-size: 9px;
+  font-size: 14px;
   color: #a0ab95;
 }
 .compose {
@@ -811,11 +817,11 @@ label {
   margin-top: 15px;
 }
 .compose h1 {
-  font-size: 34px;
+  font-size: 40px;
   margin-bottom: 13px;
 }
 .lede {
-  font-size: 14px;
+  font-size: 18px;
   color: #829078;
   margin-bottom: 32px;
 }
@@ -827,19 +833,19 @@ label {
   margin-bottom: 20px;
 }
 .sample-buttons > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #96a08c;
 }
 .sample-buttons button {
-  font-size: 11px;
+  font-size: 16px;
 }
 .compose label {
-  font-size: 11px;
+  font-size: 16px;
   color: #627455;
 }
 .email-input {
   font-family: ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 16px;
   line-height: 1.85;
   background: #fcfdf9;
   border-color: #d7dfce;
@@ -857,7 +863,7 @@ label {
   gap: 7px;
   align-items: center;
   color: #909d83;
-  font-size: 10px;
+  font-size: 14px;
   margin: 0;
 }
 .empty-state {
@@ -875,7 +881,7 @@ label {
   border: 1px solid #edcdbb;
   color: #a54f32;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 16px;
   display: flex;
   gap: 9px;
   align-items: center;
@@ -891,7 +897,7 @@ label {
   color: #507343;
   border: 1px solid #d4e3ca;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -911,13 +917,13 @@ label {
   }
 }
 .app-footer {
-  height: 39px;
+  min-height: 48px;
   padding: 0 36px;
   border-top: 1px solid #dce1da;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px;
+  font-size: 14px;
   color: #99a28f;
   background: #fafbf7;
 }
@@ -941,7 +947,7 @@ label {
     padding: 35px;
   }
   .workspace {
-    grid-template-columns: 255px minmax(0, 1fr);
+    grid-template-columns: 300px minmax(0, 1fr);
   }
   .banner-label {
     display: none;
@@ -951,7 +957,7 @@ label {
     flex-direction: column;
   }
   .invoice-total {
-    font-size: 24px;
+    font-size: 30px;
   }
   .amend-fields {
     flex-direction: column;
@@ -967,27 +973,27 @@ label {
     padding: 30px;
   }
   .login-story h1 {
-    font-size: 30px;
+    font-size: 36px;
   }
   .login-story > div p:not(.eyebrow) {
-    font-size: 14px;
+    font-size: 18px;
   }
   .login-form {
     padding: 35px;
   }
   .app-header {
-    height: 65px;
+    min-height: 76px;
     padding: 0 18px;
   }
   .brand {
-    font-size: 19px;
+    font-size: 24px;
   }
   .brand-icon {
     width: 29px;
     height: 32px;
   }
   .identity {
-    font-size: 10px;
+    font-size: 14px;
     gap: 6px;
   }
   .identity .avatar {
@@ -1008,7 +1014,7 @@ label {
     display: none;
   }
   .sidebar h2 {
-    font-size: 16px;
+    font-size: 20px;
     margin: 0;
   }
   .invoice-list {
@@ -1017,23 +1023,23 @@ label {
     margin-top: 14px;
   }
   .invoice-row {
-    min-width: 220px;
-    max-width: 260px;
+    min-width: 270px;
+    max-width: 310px;
   }
   .work-area {
     padding: 28px 20px;
   }
   .invoice-heading h1 {
-    font-size: 24px;
+    font-size: 30px;
   }
   .invoice-total {
-    font-size: 20px;
+    font-size: 26px;
   }
   .invoice-heading {
     gap: 12px;
   }
   .invoice-date {
-    font-size: 9px;
+    font-size: 14px;
   }
   .detail-grid {
     grid-template-columns: 1fr;
@@ -1043,7 +1049,7 @@ label {
     border-top: 1px solid #e0e5dc;
   }
   .compose h1 {
-    font-size: 28px;
+    font-size: 34px;
   }
   .compose-bottom {
     align-items: stretch;
@@ -1066,10 +1072,10 @@ label {
     padding: 15px;
   }
   .invoice-total span {
-    font-size: 9px;
+    font-size: 14px;
   }
   .event-header time {
-    font-size: 8px;
+    font-size: 14px;
   }
 }
 
@@ -1087,7 +1093,7 @@ label {
 }
 .voice-read-only {
   color: #496454;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
 }
 .voice-question {
@@ -1102,7 +1108,7 @@ label {
 .voice-question label {
   display: block;
   margin-bottom: 6px;
-  font-size: 13px;
+  font-size: 17px;
 }
 .voice-question input {
   width: 100%;
@@ -1114,13 +1120,13 @@ label {
 .voice-boundary,
 .voice-notice {
   color: #59675e;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.6;
   margin: 12px 0 0;
 }
 .voice-error {
   color: #994626;
-  font-size: 13px;
+  font-size: 17px;
   margin: 12px 0 0;
 }
 .voice-answer {
@@ -1129,7 +1135,7 @@ label {
   padding-top: 18px;
 }
 .voice-answer-text {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
   color: #213d2c;
   margin: 0 0 12px;
@@ -1140,13 +1146,13 @@ label {
 }
 .voice-evidence-heading {
   margin-top: 18px;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
 }
 .voice-evidence-heading span {
   display: block;
   color: #69756d;
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 400;
   margin-top: 4px;
 }
@@ -1160,18 +1166,18 @@ label {
   border-top: 1px solid #dce5df;
 }
 .voice-evidence strong {
-  font-size: 13px;
+  font-size: 17px;
   text-transform: capitalize;
 }
 .voice-evidence p {
-  font-size: 13px;
+  font-size: 17px;
   line-height: 1.65;
   margin: 5px 0;
   overflow-wrap: anywhere;
 }
 .voice-evidence li > span {
   color: #69756d;
-  font-size: 11px;
+  font-size: 16px;
 }
 @media (max-width: 860px) {
   .voice-question {
@@ -1192,11 +1198,11 @@ label {
   background: #fbf8f1;
 }
 .rehearsal-check h2 {
-  font-size: 15px;
+  font-size: 20px;
   margin: 0 0 8px;
 }
 .rehearsal-check p {
-  font-size: 13px;
+  font-size: 17px;
   line-height: 1.6;
   margin: 0 0 14px;
 }
