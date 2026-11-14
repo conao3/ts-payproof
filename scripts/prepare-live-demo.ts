@@ -8,6 +8,7 @@ import { readConfig } from "../apps/api/src/config.ts"
 
 const config = readConfig()
 const started = performance.now()
+const unprocessed = process.argv.includes("--unprocessed")
 let cookie = ""
 const endpoint = "http://127.0.0.1:4100/api/graphql"
 async function request(query: string, variables: unknown) {
@@ -52,25 +53,43 @@ const created = z
     ),
   ).submitInvoiceEmail
 const fields = "id revision status proposal { invoiceNumber amountCents beneficiaryAccount }"
-const invoice = z
-  .object({
-    runInvoiceAgent: z.object({
-      id: z.uuid(),
-      revision: z.number().int(),
-      status: z.literal("awaiting_verification"),
-      proposal: z.object({
-        invoiceNumber: z.literal(invoiceNumber),
-        amountCents: z.literal(480000),
-        beneficiaryAccount: z.literal("CA-DEMO-999-7719"),
+const extracted = unprocessed
+  ? null
+  : z
+      .object({
+        runInvoiceAgent: z.object({
+          id: z.uuid(),
+          revision: z.number().int(),
+          status: z.literal("awaiting_verification"),
+          proposal: z.object({
+            invoiceNumber: z.literal(invoiceNumber),
+            amountCents: z.literal(480000),
+            beneficiaryAccount: z.literal("CA-DEMO-999-7719"),
+          }),
+        }),
+      })
+      .parse(
+        await request(
+          `mutation Extract($id: ID!, $revision: Int!) { runInvoiceAgent(invoiceId: $id, expectedRevision: $revision) { ${fields} } }`,
+          { id: created.id, revision: created.revision },
+        ),
+      ).runInvoiceAgent
+const invoice =
+  extracted ??
+  z
+    .object({
+      invoice: z.object({
+        id: z.uuid(),
+        revision: z.literal(0),
+        status: z.literal("received"),
+        proposal: z.null(),
       }),
-    }),
-  })
-  .parse(
-    await request(
-      `mutation Extract($id: ID!, $revision: Int!) { runInvoiceAgent(invoiceId: $id, expectedRevision: $revision) { ${fields} } }`,
-      { id: created.id, revision: created.revision },
-    ),
-  ).runInvoiceAgent
+    })
+    .parse(
+      await request(`query Prepared($id: ID!) { invoice(id: $id) { ${fields} } }`, {
+        id: created.id,
+      }),
+    ).invoice
 const ledgerClient = new MongoClient(z.string().min(1).parse(process.env.PAYMENT_MONGODB_URI))
 await ledgerClient.connect()
 let ledgerCount: number
@@ -89,10 +108,14 @@ const record = {
   revision: invoice.revision,
   status: invoice.status,
   fixtureLedgerCount: ledgerCount,
+  mode: unprocessed ? "unprocessed" : "held",
+  nextAction: unprocessed
+    ? "Select the newly received invoice and click Run invoice agent to extract it and show the changed-account hold."
+    : "Record independent verification using the separate approver.",
   preparationSeconds: Math.round((performance.now() - started) / 100) / 10,
   humanVerificationText: `Synthetic roleplay: called saved Alex Chen at 555-0142 and confirmed ${invoiceNumber}, CAD 4,800.00, destination ending 7719.`,
   reset:
-    "Run pnpm demo:prepare again to create a fresh LIVE- invoice. Previous invoices and ledger records are retained.",
+    "Run pnpm demo:prepare --unprocessed for a fresh received LIVE- invoice, or pnpm demo:prepare for a held invoice. Previous invoices and ledger records are retained.",
 }
 const directory = resolve(".claude-dev/scratch/live-demo")
 await mkdir(directory, { recursive: true })
