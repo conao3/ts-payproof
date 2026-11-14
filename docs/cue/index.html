@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#193e35" />
+    <meta name="robots" content="noindex" />
+    <title>PayProof | Live demo cue sheet</title>
+    <style>
+      :root {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #193e35;
+        background: #f4f8f5;
+        font-synthesis: none;
+        -webkit-text-size-adjust: 100%;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #193e35;
+        color: #fff;
+        padding: 12px max(16px, env(safe-area-inset-right)) 10px
+          max(16px, env(safe-area-inset-left));
+        box-shadow: 0 1px 0 #ffffff33;
+      }
+      header .name {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+      }
+      h1 {
+        font-size: 19px;
+        margin: 0;
+        font-weight: 650;
+      }
+      header .duration {
+        font-size: 14px;
+        color: #d7e8dc;
+      }
+      nav {
+        display: flex;
+        gap: 7px;
+        margin-top: 10px;
+        justify-content: space-between;
+      }
+      nav a {
+        display: grid;
+        place-items: center;
+        min-width: 36px;
+        min-height: 44px;
+        text-decoration: none;
+        border: 1px solid #a5c1b6;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: 650;
+      }
+      nav a:focus-visible,
+      .next:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #d5a64a;
+        outline-offset: 3px;
+      }
+      main {
+        max-width: 720px;
+        margin: auto;
+        padding: 22px max(18px, env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom))
+          max(18px, env(safe-area-inset-left));
+      }
+      .intro {
+        font-size: 18px;
+        line-height: 1.6;
+        margin: 0 0 24px;
+      }
+      .intro strong {
+        display: block;
+        font-size: 23px;
+        margin-bottom: 8px;
+      }
+      .cue {
+        padding: 20px 0 26px;
+        border-top: 2px solid #b9cec3;
+        scroll-margin-top: 126px;
+      }
+      .cue-heading {
+        display: flex;
+        justify-content: space-between;
+        color: #526f63;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      h2 {
+        font-size: 29px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 10px 0 18px;
+      }
+      .action {
+        font-size: 18px;
+        line-height: 1.7;
+        padding: 13px 15px;
+        background: #e3ece6;
+        border-left: 4px solid #527b69;
+        margin: 0 0 22px;
+        overflow-wrap: anywhere;
+      }
+      .speech {
+        font-size: 25px;
+        line-height: 1.5;
+        margin: 0 0 22px;
+      }
+      .next {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 48px;
+        padding: 10px 0;
+        font-size: 18px;
+        font-weight: 650;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      details {
+        border-top: 1px solid #b9cec3;
+        padding: 8px 0;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+      summary {
+        min-height: 48px;
+        padding: 12px 0;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      details p {
+        margin: 10px 0 20px;
+      }
+      code {
+        font-family: inherit;
+        overflow-wrap: anywhere;
+      }
+      #finish {
+        padding-top: 20px;
+        border-top: 2px solid #b9cec3;
+        scroll-margin-top: 126px;
+      }
+      #finish > p {
+        font-size: 20px;
+        line-height: 1.6;
+      }
+      .fallback {
+        border-left: 4px solid #aa6924;
+        padding-left: 16px;
+      }
+      .qa strong {
+        display: block;
+      }
+      footer {
+        margin-top: 28px;
+        font-size: 15px;
+        color: #526f63;
+      }
+      @media (max-width: 359px) {
+        .speech {
+          font-size: 23px;
+        }
+        nav {
+          gap: 4px;
+        }
+        nav a {
+          min-width: 33px;
+        }
+        h1 {
+          font-size: 17px;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+      @media print {
+        header {
+          position: static;
+        }
+        .next,
+        nav {
+          display: none;
+        }
+        .speech {
+          font-size: 16px;
+        }
+        .cue {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="name">
+        <h1>PayProof · Live cues</h1>
+        <span class="duration">3 min</span>
+      </div>
+      <nav aria-label="Jump to demo step">
+        <a href="#step-1" aria-label="Step 1: Hold">1</a
+        ><a href="#step-2" aria-label="Step 2: Verify & approve">2</a
+        ><a href="#step-3" aria-label="Step 3: Change & reject">3</a
+        ><a href="#step-4" aria-label="Step 4: Restore amount">4</a
+        ><a href="#step-5" aria-label="Step 5: Approve again">5</a
+        ><a href="#step-6" aria-label="Step 6: Run payment">6</a
+        ><a href="#step-7" aria-label="Step 7: Summary">7</a>
+      </nav>
+    </header>
+    <main>
+      <p class="intro" lang="ja">
+        <strong>1分の動画 → 3分の操作 → Summary</strong
+        >PCで男性ナレーション付き動画を再生。右矢印でDemoへ進み、アプリへ切り替える。ここから下の3分を開始。操作を見せながら、英語の大きい文を読む。
+      </p>
+      <section class="cue" id="step-1" aria-labelledby="heading-1">
+        <div class="cue-heading"><span>0:00–0:20</span><span>1 / 7</span></div>
+        <h2 id="heading-1">Hold</h2>
+        <p class="action" lang="ja">保留と0042／7719を示し、承認者の別窓へ。</p>
+        <p class="speech">
+          Now I will use the live app. The account is different, so this payment is on hold.
+        </p>
+        <a class="next" href="#step-2">Next: Verify & approve <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-2" aria-labelledby="heading-2">
+        <div class="cue-heading"><span>0:20–0:50</span><span>2 / 7</span></div>
+        <h2 id="heading-2">Verify & approve</h2>
+        <p class="action" lang="ja">
+          Evidence貼付 → 保存済み連絡先checkbox → Record verification → Approve this payment。
+        </p>
+        <p class="speech">
+          A separate person checks the saved supplier contact. This check is a role-play. I approve
+          these exact details.
+        </p>
+        <a class="next" href="#step-3">Next: Change & reject <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-3" aria-labelledby="heading-3">
+        <div class="cue-heading"><span>0:50–1:20</span><span>3 / 7</span></div>
+        <h2 id="heading-3">Change & reject</h2>
+        <p class="action" lang="ja">
+          operatorへF5 → Amend payment details → 4900 → Save amendment → Try earlier approval。
+        </p>
+        <p class="speech">
+          Now I change the amount to 4,900 dollars. The old approval is removed. This request
+          reaches the server, and the server rejects it.
+        </p>
+        <a class="next" href="#step-4">Next: Restore amount <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-4" aria-labelledby="heading-4">
+        <div class="cue-heading"><span>1:20–1:40</span><span>4 / 7</span></div>
+        <h2 id="heading-4">Restore amount</h2>
+        <p class="action" lang="ja">
+          Amend payment details → 4800 → Save amendment → approver窓へF5。
+        </p>
+        <p class="speech">Even when I return to 4,800 dollars, I need a new check and approval.</p>
+        <a class="next" href="#step-5">Next: Approve again <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-5" aria-labelledby="heading-5">
+        <div class="cue-heading"><span>1:40–2:10</span><span>5 / 7</span></div>
+        <h2 id="heading-5">Approve again</h2>
+        <p class="action" lang="ja">
+          Evidence貼付 → checkbox → Record verification → Approve this payment。
+        </p>
+        <p class="speech">
+          I check the new revision and approve it again. The agent cannot approve its own request.
+        </p>
+        <a class="next" href="#step-6">Next: Run payment <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-6" aria-labelledby="heading-6">
+        <div class="cue-heading"><span>2:10–2:40</span><span>6 / 7</span></div>
+        <h2 id="heading-6">Run payment</h2>
+        <p class="action" lang="ja">operatorへF5 → Run payment agent → receiptとDecision trail。</p>
+        <p class="speech">
+          Now the agent can run the payment. This is a separate payment simulator. No real money
+          moves. Atlas records the approval and result.
+        </p>
+        <a class="next" href="#step-7">Next: Summary <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="cue" id="step-7" aria-labelledby="heading-7">
+        <div class="cue-heading"><span>2:40–3:00</span><span>7 / 7</span></div>
+        <h2 id="heading-7">Summary</h2>
+        <p class="action" lang="ja">operator窓のスライドタブへ → Demoから右矢印。</p>
+        <p class="speech">
+          The model reads. A person approves. The server checks. Atlas keeps the evidence. Thank
+          you.
+        </p>
+        <a class="next" href="#finish">Finish <span aria-hidden="true">↓</span></a>
+      </section>
+      <section id="finish">
+        <h2>Finish on Summary</h2>
+        <p lang="ja">
+          2:40にはスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
+        </p>
+      </section>
+      <details class="fallback">
+        <summary>Stuck? Use the recording</summary>
+        <p lang="ja">
+          約5秒で進まなければ連打しない。PCのスライドへ戻り、左でOverview、下で0秒へ。動画のコントロールで該当箇所へ移動して再生。
+        </p>
+        <p class="speech">I'll show the recording of the same flow.</p>
+        <p lang="ja">録画をライブ操作の成功と呼ばない。支払結果が不明なら別請求でやり直さない。</p>
+      </details>
+      <details>
+        <summary>Before starting</summary>
+        <p lang="ja">
+          PCのoperator窓は左にスライド、右にアプリ。approverは独立認証の別窓。両方で同じ本番用LIVE請求を選ぶ。開始時は保留、CAD4,800、登録0042・要求7719。
+        </p>
+        <p lang="ja">
+          窓を戻したらF5。PCのCtrl+Tabでスライド→アプリ、Ctrl+Shift+Tabで戻る。別窓への切替を先に練習する。音量・投影・通知を確認。iPhoneはこのカンペの表示に使う。
+        </p>
+        <p lang="ja">確認は合成ロールプレイ。実電話・実送金と説明しない。Evidence欄の例：</p>
+        <p>
+          Demo role-play: confirmed CAD 4,800 and account ending 7719 using the saved supplier
+          contact.
+        </p>
+      </details>
+      <details class="qa">
+        <summary>Quick Q&amp;A</summary>
+        <p>
+          <strong>What does MongoDB do?</strong>Atlas stores people, suppliers, approvals, state,
+          and evidence. The server checks these before payment.
+        </p>
+        <p>
+          <strong>Can the agent approve itself?</strong>No. Approval needs a separate signed-in
+          person. Direct API calls face the same checks.
+        </p>
+        <p>
+          <strong>Is this a real payment?</strong>The model and Atlas are real. Supplier
+          confirmation is synthetic. Payment is simulated.
+        </p>
+        <p>
+          <strong>What if the response is lost?</strong>We keep the same payment ID and check it
+          again. We have not tested every network failure.
+        </p>
+      </details>
+      <footer><a href="#step-1">Back to the first cue ↑</a> · <a href="../">PayProof</a></footer>
+    </main>
+  </body>
+</html>
