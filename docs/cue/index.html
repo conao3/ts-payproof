@@ -256,7 +256,7 @@
         <a class="next" href="#step-2">Next: Verify & approve <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-2" aria-labelledby="heading-2">
-        <div class="cue-heading"><span>0:20–0:50</span><span>2 / 7</span></div>
+        <div class="cue-heading"><span>0:20–0:45</span><span>2 / 7</span></div>
         <h2 id="heading-2">Verify & approve</h2>
         <p class="action" lang="ja">
           approverの別窓へ切替 → F5 → 同じ請求を選択。Evidence欄へ下の英文を入力する。
@@ -279,7 +279,7 @@
         <a class="next" href="#step-3">Next: Change & reject <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-3" aria-labelledby="heading-3">
-        <div class="cue-heading"><span>0:50–1:20</span><span>3 / 7</span></div>
+        <div class="cue-heading"><span>0:45–1:10</span><span>3 / 7</span></div>
         <h2 id="heading-3">Change & reject</h2>
         <p class="action" lang="ja">
           operatorへF5 → Amend payment details → 4900 → Save amendment → Try earlier approval。
@@ -291,7 +291,7 @@
         <a class="next" href="#step-4">Next: Restore amount <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-4" aria-labelledby="heading-4">
-        <div class="cue-heading"><span>1:20–1:40</span><span>4 / 7</span></div>
+        <div class="cue-heading"><span>1:10–1:25</span><span>4 / 7</span></div>
         <h2 id="heading-4">Restore amount</h2>
         <p class="action" lang="ja">
           Amend payment details → 4800 → Save amendment → approver窓へF5。
@@ -300,7 +300,7 @@
         <a class="next" href="#step-5">Next: Approve again <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-5" aria-labelledby="heading-5">
-        <div class="cue-heading"><span>1:40–2:10</span><span>5 / 7</span></div>
+        <div class="cue-heading"><span>1:25–1:50</span><span>5 / 7</span></div>
         <h2 id="heading-5">Approve again</h2>
         <p class="action" lang="ja">
           4,800へ戻した後、approverの別窓でF5 →
@@ -321,7 +321,7 @@
         <a class="next" href="#step-6">Next: Run payment <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-6" aria-labelledby="heading-6">
-        <div class="cue-heading"><span>2:10–2:40</span><span>6 / 7</span></div>
+        <div class="cue-heading"><span>1:50–2:15</span><span>6 / 7</span></div>
         <h2 id="heading-6">Run payment</h2>
         <p class="action" lang="ja">operatorへF5 → Run payment agent → receiptとDecision trail。</p>
         <p class="speech">
@@ -331,19 +331,26 @@
         <a class="next" href="#step-7">Next: Summary <span aria-hidden="true">↓</span></a>
       </section>
       <section class="cue" id="step-7" aria-labelledby="heading-7">
-        <div class="cue-heading"><span>2:40–3:00</span><span>7 / 7</span></div>
+        <div class="cue-heading"><span>2:15–3:00</span><span>7 / 7</span></div>
         <h2 id="heading-7">Summary</h2>
-        <p class="action" lang="ja">operator窓のスライドタブへ → Demoから右矢印。</p>
+        <p class="action" lang="ja">
+          Summaryへ戻る。左上のLLM → 中央のserver → 下のhuman → 右上のpayment → 左下のAtlas →
+          右下のElevenLabsを順に指して、図全体を説明する。
+        </p>
         <p class="speech">
-          The model reads. A person approves. The server checks. Atlas keeps the evidence. Thank
-          you.
+          The model reads the invoice on the left. The server checks roles and payment details in
+          Atlas, in a transaction. A separate person verifies and approves the exact payment. The
+          server then calls the payment simulator and checks its receipt. Atlas stores identities,
+          approvals, state and history. State and history change together. One payment ID prevents
+          duplicates. On the right, ElevenLabs turns speech into text and reads answers from Atlas
+          evidence. Voice can explain payments, but cannot approve or send them. Thank you.
         </p>
         <a class="next" href="#finish">Finish <span aria-hidden="true">↓</span></a>
       </section>
       <section id="finish">
         <h2>Finish on Summary</h2>
         <p lang="ja">
-          2:40にはスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
+          2:15にはスライドへ戻る。Summaryを表示したまま質疑へ。時間は目安。本番の手操作で一度計時する。
         </p>
       </section>
       <details class="fallback">
