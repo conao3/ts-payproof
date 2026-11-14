@@ -163,8 +163,9 @@ function arrow(x, y, width) {
 
 const videoPanel = document.querySelector("#video-panel")
 const playButton = document.querySelector("#play")
-const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=9"
+const videoSource = new URLSearchParams(location.search).get("video") || "media/demo.mp4?v=10"
 video.src = videoSource
+video.poster = "assets/title-card.svg"
 video.muted = false
 video.volume = 1
 document.addEventListener("visibilitychange", () => {
