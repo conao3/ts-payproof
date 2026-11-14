@@ -1,0 +1,149 @@
+fragment InvoiceView on Invoice {
+  id
+  createdAt
+  updatedAt
+  revision
+  status
+  sourceEmail
+  error
+  paymentHash
+  accountChanged
+  operationId
+  proposal {
+    vendorId
+    invoiceNumber
+    amountCents
+    currency
+    beneficiaryAccount
+    reason
+  }
+  vendor {
+    id
+    name
+    account
+    contactRef
+    contactName
+    contactPhone
+    revision
+  }
+  verification {
+    actorId
+    at
+    contactRef
+    evidence
+    payloadHash
+  }
+  approval {
+    actorId
+    at
+    payloadHash
+  }
+  payment {
+    id
+    operationId
+    receipt
+    recordedAt
+    amountCents
+    currency
+    beneficiaryAccount
+    payloadHash
+  }
+  events {
+    id
+    at
+    actor
+    kind
+    reason
+    revision
+  }
+}
+query Viewer {
+  viewer {
+    id
+    role
+    organization
+  }
+}
+query Workspace {
+  invoices {
+    ...InvoiceView
+  }
+  vendors {
+    id
+    name
+    account
+    contactRef
+    contactName
+    contactPhone
+    revision
+  }
+}
+mutation Login($accessKey: String!) {
+  login(accessKey: $accessKey) {
+    id
+    role
+    organization
+  }
+}
+mutation Logout {
+  logout
+}
+mutation Submit($email: String!, $idempotencyKey: String!) {
+  submitInvoiceEmail(email: $email, idempotencyKey: $idempotencyKey) {
+    ...InvoiceView
+  }
+}
+mutation RunAgent($invoiceId: ID!, $expectedRevision: Int!) {
+  runInvoiceAgent(invoiceId: $invoiceId, expectedRevision: $expectedRevision) {
+    ...InvoiceView
+  }
+}
+mutation Verify(
+  $invoiceId: ID!
+  $expectedRevision: Int!
+  $contactRef: String!
+  $evidence: String!
+) {
+  recordIndependentVerification(
+    invoiceId: $invoiceId
+    expectedRevision: $expectedRevision
+    contactRef: $contactRef
+    evidence: $evidence
+  ) {
+    ...InvoiceView
+  }
+}
+mutation Approve($invoiceId: ID!, $expectedRevision: Int!, $payloadHash: String!) {
+  approvePayment(
+    invoiceId: $invoiceId
+    expectedRevision: $expectedRevision
+    payloadHash: $payloadHash
+  ) {
+    ...InvoiceView
+  }
+}
+mutation Dispatch($invoiceId: ID!, $expectedRevision: Int!) {
+  dispatchPayment(invoiceId: $invoiceId, expectedRevision: $expectedRevision) {
+    ...InvoiceView
+  }
+}
+mutation Cancel($invoiceId: ID!, $expectedRevision: Int!) {
+  cancelPayment(invoiceId: $invoiceId, expectedRevision: $expectedRevision) {
+    ...InvoiceView
+  }
+}
+mutation Revise(
+  $invoiceId: ID!
+  $expectedRevision: Int!
+  $amountCents: Int!
+  $beneficiaryAccount: String!
+) {
+  revisePayment(
+    invoiceId: $invoiceId
+    expectedRevision: $expectedRevision
+    amountCents: $amountCents
+    beneficiaryAccount: $beneficiaryAccount
+  ) {
+    ...InvoiceView
+  }
+}

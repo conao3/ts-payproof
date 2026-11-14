@@ -7,3 +7,4 @@ result
 .direnv/
 .vite-hooks/
 .claude-dev/
+**/generated/

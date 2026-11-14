@@ -1,0 +1,97 @@
+type Viewer {
+  id: ID!
+  role: String!
+  organization: String!
+}
+type Vendor {
+  id: ID!
+  name: String!
+  account: String!
+  contactRef: String!
+  contactName: String!
+  contactPhone: String!
+  revision: Int!
+}
+type Proposal {
+  vendorId: ID!
+  invoiceNumber: String!
+  amountCents: Int!
+  currency: String!
+  beneficiaryAccount: String!
+  reason: String!
+}
+type AuditEvent {
+  id: ID!
+  at: String!
+  actor: String!
+  kind: String!
+  reason: String!
+  revision: Int!
+}
+type Verification {
+  actorId: ID!
+  at: String!
+  contactRef: String!
+  evidence: String!
+  payloadHash: String!
+}
+type Approval {
+  actorId: ID!
+  at: String!
+  payloadHash: String!
+}
+type Payment {
+  id: ID!
+  operationId: ID!
+  payloadHash: String!
+  receipt: String!
+  recordedAt: String!
+  amountCents: Int!
+  currency: String!
+  beneficiaryAccount: String!
+}
+type Invoice {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  revision: Int!
+  status: String!
+  sourceEmail: String!
+  proposal: Proposal
+  vendor: Vendor
+  verification: Verification
+  approval: Approval
+  operationId: ID
+  payment: Payment
+  events: [AuditEvent!]!
+  error: String
+  paymentHash: String
+  accountChanged: Boolean!
+}
+type Query {
+  viewer: Viewer
+  invoices: [Invoice!]!
+  invoice(id: ID!): Invoice!
+  vendors: [Vendor!]!
+}
+type Mutation {
+  login(accessKey: String!): Viewer!
+  logout: Boolean!
+  submitInvoiceEmail(email: String!, idempotencyKey: String!): Invoice!
+  runInvoiceAgent(invoiceId: ID!, expectedRevision: Int!): Invoice!
+  recordIndependentVerification(
+    invoiceId: ID!
+    expectedRevision: Int!
+    contactRef: String!
+    evidence: String!
+  ): Invoice!
+  approvePayment(invoiceId: ID!, expectedRevision: Int!, payloadHash: String!): Invoice!
+  dispatchPayment(invoiceId: ID!, expectedRevision: Int!): Invoice!
+  cancelPayment(invoiceId: ID!, expectedRevision: Int!): Invoice!
+  revisePayment(
+    invoiceId: ID!
+    expectedRevision: Int!
+    amountCents: Int!
+    beneficiaryAccount: String!
+  ): Invoice!
+}

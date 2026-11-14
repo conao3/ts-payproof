@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+runtimeOnFail: ignore
+pmOnFail: ignore
+overrides:
+  vite: npm:@voidzero-dev/vite-plus-core@1.6.0
+  postcss: 8.5.32
+  tapable: 2.3.3
+  "@msw/url": 0.1.2
