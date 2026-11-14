@@ -456,6 +456,52 @@ p + p {
   padding-bottom: 4rem;
   border-top: 1px solid var(--line);
 }
+.voice-guide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 4rem;
+  border-top: 1px solid var(--line);
+  padding-block: 3.5rem;
+}
+.voice-guide h2 {
+  margin-bottom: 1.75rem;
+}
+.voice-guide p {
+  max-width: 39rem;
+}
+.voice-route {
+  padding: 1.5rem 2rem;
+  background: var(--soft);
+}
+.voice-route strong,
+.voice-route span:not(.map-arrow) {
+  display: block;
+}
+.voice-route strong {
+  font-size: 1.25rem;
+}
+.voice-route span:not(.map-arrow) {
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.voice-route .map-arrow {
+  margin-block: 0.4rem;
+}
+.voice-route > p {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 671px) {
+  .voice-guide {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-block: 2.5rem;
+  }
+  .voice-route {
+    padding: 1.5rem;
+  }
+}
 .underneath h2 {
   margin-bottom: 1.75rem;
 }

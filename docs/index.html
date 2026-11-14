@@ -399,6 +399,51 @@
         </article>
       </section>
 
+      <section class="voice-guide wrap" aria-labelledby="voice-guide-title">
+        <div>
+          <h2 id="voice-guide-title">
+            Ask about a payment.<br />See the evidence behind the answer.
+          </h2>
+          <p>
+            Open an invoice and use <strong>Ask about this invoice</strong>. Choose
+            <strong>Record question</strong>, ask your question, then choose
+            <strong>Stop and ask</strong>. You can also type a question. The answer includes
+            readable Atlas records and an audio player.
+          </p>
+          <p>
+            Ask why a payment was held, who approved it, what changed after an amendment, or whether
+            the simulated payment completed. The server uses only this invoice's evidence and checks
+            your current identity and tenant before answering.
+          </p>
+        </div>
+        <div class="voice-route">
+          <div>
+            <strong>Question audio</strong><span>ElevenLabs turns your question into text.</span>
+          </div>
+          <span class="map-arrow" aria-hidden="true">↓</span>
+          <div>
+            <strong>Answer + supporting records</strong
+            ><span
+              >The model explains the authorized Atlas snapshot. The screen shows the records it
+              cites.</span
+            >
+          </div>
+          <span class="map-arrow" aria-hidden="true">↓</span>
+          <div>
+            <strong>Spoken answer</strong
+            ><span
+              >ElevenLabs reads the explanation. The existing controls handle verification,
+              approval, and payment.</span
+            >
+          </div>
+          <p class="detail">
+            Voice questions read evidence. They cannot approve, send money, or change an account.
+            The recorded 60-second demo shows the payment workflow; this voice panel was added
+            afterward.
+          </p>
+        </div>
+      </section>
+
       <section class="underneath wrap" aria-labelledby="underneath-title">
         <div>
           <h2 id="underneath-title">Atlas keeps permission<br />and evidence in reach.</h2>
@@ -421,8 +466,8 @@
             <div>
               <dt>Real</dt>
               <dd>
-                Tool-calling LLM, MongoDB Atlas, server-side permission checks, HTTP requests, and
-                receipt matching.
+                Tool-calling LLM, MongoDB Atlas, ElevenLabs speech recognition and synthesis,
+                server-side permission checks, HTTP requests, and receipt matching.
               </dd>
             </div>
             <div>
