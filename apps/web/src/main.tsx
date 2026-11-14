@@ -191,6 +191,11 @@ function Workspace({
   const [busy, setBusy] = useState("")
   const [error, setError] = useState("")
   const [submit] = useMutation(SubmitDocument)
+  const [priorRefusal, setPriorRefusal] = useState<{
+    invoiceId: string
+    revision: number
+    message: string
+  } | null>(null)
   const [runAgent] = useMutation(RunAgentDocument)
   const [verify] = useMutation(VerifyDocument)
   const [approve] = useMutation(ApproveDocument)
@@ -205,6 +210,9 @@ function Workspace({
   const invoices = query.data?.invoices.map((i) => getFragmentData(InvoiceViewFragmentDoc, i)) ?? []
   const invoice = invoices.find((i) => i.id === selected) ?? invoices[0]
   const operator = person.role === "operator"
+  const priorApproval = invoice?.events.findLast(
+    (entry) => entry.kind === "PAYMENT_APPROVED" && entry.revision < invoice.revision,
+  )
   const needingReview = invoices.filter((i) =>
     ["awaiting_verification", "awaiting_approval"].includes(i.status),
   ).length
@@ -684,6 +692,50 @@ function Workspace({
                       </div>
                     </DisclosurePanel>
                   </Disclosure>
+                )}
+              {operator &&
+                invoice.proposal?.invoiceNumber.startsWith("LIVE-") &&
+                priorApproval &&
+                ["awaiting_verification", "awaiting_approval"].includes(invoice.status) && (
+                  <section className="rehearsal-check">
+                    <h2>Earlier approval check</h2>
+                    <p>
+                      This synthetic rehearsal invoice was approved at revision{" "}
+                      {priorApproval.revision}. The new amount needs a new approval. Try the earlier
+                      revision to see the refusal.
+                    </p>
+                    <Button
+                      className="secondary"
+                      isDisabled={!!busy}
+                      onPress={() =>
+                        void act("Checking the earlier approval…", async () => {
+                          try {
+                            await dispatch({
+                              variables: {
+                                invoiceId: invoice.id,
+                                expectedRevision: priorApproval.revision,
+                              },
+                            })
+                          } catch (reason) {
+                            setPriorRefusal({
+                              invoiceId: invoice.id,
+                              revision: invoice.revision,
+                              message: reason instanceof Error ? reason.message : "Request refused",
+                            })
+                            throw reason
+                          }
+                        })
+                      }
+                    >
+                      Try earlier approval (revision {priorApproval.revision})
+                    </Button>
+                    {priorRefusal?.invoiceId === invoice.id &&
+                      priorRefusal.revision === invoice.revision && (
+                        <p className="voice-error" role="alert">
+                          Earlier request: {priorRefusal.message}
+                        </p>
+                      )}
+                  </section>
                 )}
               <VoicePanel
                 key={`${invoice.id}:${invoice.revision}:${invoice.status}`}

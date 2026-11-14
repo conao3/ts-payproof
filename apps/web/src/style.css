@@ -1184,3 +1184,19 @@ label {
     padding: 18px;
   }
 }
+
+.rehearsal-check {
+  margin-top: 22px;
+  padding: 18px 22px;
+  border-left: 3px solid #af7f33;
+  background: #fbf8f1;
+}
+.rehearsal-check h2 {
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+.rehearsal-check p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
