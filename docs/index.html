@@ -9,7 +9,7 @@
     />
     <meta name="theme-color" content="#193e35" />
     <title>PayProof — Check the change before paying the invoice</title>
-    <link rel="stylesheet" href="site.css" />
+    <link rel="stylesheet" href="site.css?v=engineering-evidence" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -243,23 +243,25 @@
         </div>
         <div class="architecture-examples">
           <article>
-            <h3>0042 ≠ 7719: hold</h3>
+            <h3>Check authority before dispatch.</h3>
             <p>
-              The saved supplier account ends in 0042. The email requests 7719. The server holds the
-              invoice until a different person records a check through the saved supplier contact
-              and approves the proposed details.
+              The server uses a transaction to check the role, tenant, invoice and supplier
+              revisions, policy, and exact approval against current Atlas records. Account 0042
+              differs from 7719, so a separate person must first verify the change through the saved
+              contact.
             </p>
           </article>
           <article>
-            <h3>$4,800 → $4,900: approve again</h3>
+            <h3>Approval binds the exact payment.</h3>
             <p>
-              An approval covers a specific revision, amount, currency, destination, supplier
-              revision, and policy revision. Changing the amount clears the old verification and
-              approval. The server rejects a dispatch using the old revision.
+              <strong>Changes require new approval.</strong> An approval covers a specific revision,
+              amount, currency, destination, supplier revision, and policy revision. Changing the
+              amount clears the old verification and approval. The server rejects a dispatch using
+              the old revision.
             </p>
           </article>
           <article>
-            <h3>Two requests → one entry</h3>
+            <h3>One operation. One entry.</h3>
             <p>
               Concurrent dispatch requests converge on the same operation ID. The simulator uses a
               unique tenant-and-operation key, so retrying that operation produces one ledger entry.
@@ -454,9 +456,11 @@
             Separate collections store suppliers, identities, and denied security events.
           </p>
           <p>
-            Atomic updates keep invoice state and its timeline together. Before dispatch, a
-            transaction checks current authority and revisions. The simulator uses one ledger ID per
-            tenant and operation to prevent duplicate entries.
+            <strong class="engineering-proof">State and history update atomically.</strong>
+            The same invoice update saves the new state and appends its audit event. The dispatch
+            transaction checks current authority and revisions before the HTTP payment call. The
+            simulator uses one unique ledger key per tenant and operation to prevent duplicate
+            entries.
           </p>
           <a class="text-link" href="https://github.com/conao3/ts-payproof"
             >Read the code and run locally <span aria-hidden="true">↗</span></a

@@ -5,7 +5,7 @@ const slides = [
   { title: "Demo", kind: "demo" },
   {
     title: "Summary: PayProof checks actions with Atlas evidence.",
-    support: "The server applies the rules. Atlas keeps the trusted data and decisions.",
+    support: "Approval binds the exact payment. Changes require new approval.",
     kind: "features",
   },
 ]
@@ -254,7 +254,7 @@ function draw() {
       570,
       280,
       "PayProof server",
-      "Compare and hold. Check roles, latest revision and approval before action.",
+      "Before dispatch: transaction checks role, tenant, revision and approval.",
       true,
     )
     node(1420, top, 436, 280, "HTTP payment", "One simulated ledger entry. Return a receipt.")
@@ -271,6 +271,14 @@ function draw() {
       214,
       "Separate human",
       "Use a saved supplier contact. Approve the exact payment.",
+    )
+    node(
+      1420,
+      lower,
+      436,
+      320,
+      "One operation ID",
+      "Unique tenant + operation key prevents duplicate entries.",
     )
     line(985, top + 296, 985, lower - 16)
     line(973, top + 312, 985, top + 296)
@@ -298,14 +306,14 @@ function draw() {
     line(668, top + 208, 684, top + 220)
     line(668, top + 232, 684, top + 220)
     const resultEnd = paragraph(
-      "The server verifies the receipt, then saves state and audit in Atlas.",
+      "Atomic updates keep state + history together. Receipt checked before paid.",
       64,
       lower + 352,
       1792,
       40,
     )
     paragraph(
-      "Synthetic supplier check. Simulated payment.",
+      "Real LLM + Atlas. Synthetic supplier check. Simulated payment.",
       64,
       resultEnd + 32,
       1792,
