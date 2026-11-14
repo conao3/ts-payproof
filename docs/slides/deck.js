@@ -3,40 +3,34 @@ const W = 1920,
   HOLD = 4
 const slides = [
   {
-    topic: "The business risk",
     title: "Fake bank changes put real business payments at risk.",
     support: "CAFC recommends checking bank changes through a trusted contact.",
     kind: "problem",
     duration: 8,
   },
   {
-    topic: "Stop before payment",
     title: "PayProof holds new bank details until a person checks them.",
     support: "An email can request a new account. It cannot change saved details.",
     video: "hold.mp4",
   },
   {
-    topic: "Independent human approval",
     title: "Only a separate person can approve the exact payment.",
     support: "A saved contact checks the change; a separate approver decides.",
     video: "review.mp4",
   },
   {
-    topic: "Approval follows the details",
     title: "Changing the payment removes the old approval.",
-    support: "The server rejects the old approval before any payment can run.",
+    support: "",
     video: "change.mp4",
   },
   {
-    topic: "Execute the approved action",
     title: "The agent records only the payment a person approved.",
     support: "Fresh approval, one ledger entry, and a receipt that matches.",
     video: "payment.mp4",
   },
   {
-    topic: "Agents You Can Audit",
     title: "Atlas links permission to each action and its result.",
-    support: "Saved identities, exact approval, and an audit trail stay connected.",
+    support: "The server checks live permissions and approved details before each action.",
     kind: "features",
     duration: 8,
   },
@@ -158,20 +152,25 @@ function text(s, x, y, size = 42, color = "#193e35", weight = 400) {
   ctx.font = `${weight} ${size}px Arial,sans-serif`
   ctx.fillText(s, x, y)
 }
-function wrap(s, x, y, max, size = 40, color = "#193e35", weight = 400) {
-  const words = s.split(" ")
-  let currentLine = ""
+function paragraph(value, x, top, width, size = 40, color = "#193e35", weight = 400) {
   ctx.font = `${weight} ${size}px Arial,sans-serif`
-  for (const word of words) {
-    const next = currentLine ? currentLine + " " + word : word
-    if (ctx.measureText(next).width > max && currentLine) {
-      text(currentLine, x, y, size, color, weight)
-      y += size * 1.3
-      currentLine = word
-    } else currentLine = next
+  const metrics = ctx.measureText("Mg")
+  const ascent = metrics.actualBoundingBoxAscent
+  const descent = metrics.actualBoundingBoxDescent
+  const rows = []
+  let row = ""
+  for (const word of value.split(" ")) {
+    const next = row ? row + " " + word : word
+    if (ctx.measureText(next).width > width && row) {
+      rows.push(row)
+      row = word
+    } else row = next
   }
-  text(currentLine, x, y, size, color, weight)
-  return y + size * 1.3
+  if (row) rows.push(row)
+  rows.forEach((content, i) =>
+    text(content, x, top + ascent + i * size * 1.18, size, color, weight),
+  )
+  return top + ascent + Math.max(0, rows.length - 1) * size * 1.18 + descent
 }
 function line(x1, y1, x2, y2, color = "#799489", width = 4) {
   ctx.strokeStyle = color
@@ -280,25 +279,33 @@ function draw(now) {
   diag.remaining = Math.max(0, duration + HOLD - elapsed)
   ctx.fillStyle = "#f5f8f5"
   ctx.fillRect(0, 0, W, H)
-  text(slide.topic, 64, 68, 30, "#587269")
-  wrap(slide.title, 64, 156, 1792, 64, "#193e35", 700)
-  text(slide.support, 64, 333, 40, "#193e35")
+  const titleEnd = paragraph(slide.title, 64, 48, 1792, 64, "#193e35", 700)
+  const supportEnd = slide.support
+    ? paragraph(slide.support, 64, titleEnd + 28, 1792, 40)
+    : titleEnd
+  const bodyTop = supportEnd + 34
   if (slide.kind === "problem") {
-    text("About CAD 3.5M", 64, 500, 94, "#193e35", 700)
-    wrap("recovered in a payment-redirection case at one Quebec business.", 64, 578, 900, 40)
-    wrap("CAFC also lists construction firms as common targets.", 64, 740, 900, 40)
-    text("The case's industry was not stated.", 64, 922, 38, "#587269")
+    let y = paragraph("About CAD 3.5M", 64, bodyTop + 12, 900, 94, "#193e35", 700)
+    y = paragraph(
+      "recovered in a payment-redirection case at one Quebec business.",
+      64,
+      y + 26,
+      890,
+      40,
+    )
+    y = paragraph("CAFC also lists construction firms as common targets.", 64, y + 52, 890, 40)
     const flow = [
-      { y: 410, title: "Fake email", detail: "A criminal acts as a known contact." },
-      { y: 590, title: "New bank details", detail: "The email asks for another account." },
-      { y: 770, title: "Business payment", detail: "Check the change before sending." },
+      { title: "Fake email", detail: "A criminal acts as a known contact." },
+      { title: "New bank details", detail: "The email asks for another account." },
+      { title: "Business payment", detail: "Check the change before sending." },
     ]
     flow.forEach((item, i) => {
+      const top = bodyTop + 12 + i * 208
       ctx.fillStyle = i === 1 ? "#f1dfc3" : "#dbe8e0"
-      ctx.fillRect(1060, item.y, 796, 140)
-      text(item.title, 1090, item.y + 51, 42, "#193e35", 700)
-      text(item.detail, 1090, item.y + 109, 38)
-      if (i < 2) text("↓", 1420, item.y + 177, 42, "#799489")
+      ctx.fillRect(1040, top, 816, 160)
+      const end = paragraph(item.title, 1070, top + 24, 756, 44, "#193e35", 700)
+      paragraph(item.detail, 1070, end + 18, 756, 38)
+      if (i < 2) text("↓", 1420, top + 198, 42, "#799489")
     })
     text("Source: Canadian Anti-Fraud Centre, May 13, 2026", 64, 1035, 28, "#587269")
   } else if (slide.kind === "features") {
@@ -314,66 +321,78 @@ function draw(now) {
     ]
     layers.forEach((layer, i) => {
       ctx.fillStyle = "#dbe8e0"
-      ctx.fillRect(layer.x, 430, 520, 340)
-      text(layer.title, layer.x + 28, 495, 40, "#193e35", 700)
-      text(layer.a, layer.x + 28, 590, 38)
-      text(layer.b, layer.x + 28, 675, 38)
-      if (i === 2) text("13 actions · 1 mock entry", layer.x + 28, 744, 38)
-      if (i < 2) arrow(layer.x + 536, 600, 78)
+      ctx.fillRect(layer.x, bodyTop, 520, 380)
+      let end = paragraph(layer.title, layer.x + 28, bodyTop + 32, 464, 44, "#193e35", 700)
+      end = paragraph(layer.a, layer.x + 28, end + 46, 464, 40)
+      paragraph(layer.b, layer.x + 28, end + 34, 464, 38)
+      if (i < 2) arrow(layer.x + 536, bodyTop + 190, 78)
     })
-    ctx.fillStyle = "#193e35"
-    ctx.fillRect(64, 815, 1792, 80)
-    text(
-      "Before action, the server checks live authority and the approved details.",
-      94,
-      870,
-      40,
-      "#f5f8f5",
-      600,
+    const evidenceEnd = paragraph(
+      "13 recorded actions → 1 simulated ledger entry.",
+      64,
+      bodyTop + 432,
+      1792,
+      44,
+      "#193e35",
+      700,
     )
-    text("Permission before action. Evidence after action.", 64, 965, 40, "#193e35", 700)
-    disclosure()
+    paragraph(
+      "Synthetic supplier check. Simulated payment.",
+      64,
+      evidenceEnd + 54,
+      1792,
+      38,
+      "#587269",
+    )
   } else {
+    const videoTop = bodyTop
     ctx.fillStyle = "#fff"
-    ctx.fillRect(64, 410, 960, 540)
-    if (video.readyState >= 2) ctx.drawImage(video, 64, 410, 960, 540)
-    else text("Preparing the demo…", 130, 650, 38)
-    line(1052, 410, 1052, 965)
-    const x = 1090
+    ctx.fillRect(64, videoTop, 1280, 720)
+    if (video.readyState >= 2) ctx.drawImage(video, 64, videoTop, 1280, 720)
+    else text("Preparing the demo…", 130, videoTop + 320, 38)
+    const x = 1392,
+      width = 464
+    let y = videoTop + 18
     if (index === 1) {
-      text("Saved supplier account", x, 460, 40)
-      text("0042", x, 548, 72, "#193e35", 700)
-      text("Requested by the email", x, 650, 40)
-      text("7719", x, 738, 72, "#a66b20", 700)
-      line(x, 790, 1856, 790)
-      text("Payment is on hold.", x, 856, 44, "#193e35", 700)
-      text("A separate person must check the account.", x, 930, 38)
+      y = paragraph("Saved supplier account", x, y, width, 40)
+      y = paragraph("0042", x, y + 22, width, 72, "#193e35", 700)
+      y = paragraph("Requested by the email", x, y + 42, width, 40)
+      y = paragraph("7719", x, y + 22, width, 72, "#a66b20", 700)
+      y = paragraph("Payment is on hold.", x, y + 44, width, 44, "#193e35", 700)
+      paragraph("A separate person must check the account.", x, y + 30, width, 38)
     }
     if (index === 2) {
-      text("Saved supplier contact: Alex Chen", x, 470, 40)
-      text("Independent check of the change", x, 572, 40)
-      text("↓", x + 340, 652, 42, "#799489")
-      text("Separate approver account", x, 730, 42, "#193e35", 700)
-      text("CAD 4,800 → account ending 7719", x, 812, 40)
-      text("The demo check is a role-play.", x, 930, 38, "#a66b20")
+      y = paragraph("Saved contact: Alex Chen", x, y, width, 40)
+      y = paragraph("Independent check of the change", x, y + 34, width, 40)
+      text("↓", x + 200, y + 54, 42, "#799489")
+      y = paragraph("Separate approver account", x, y + 94, width, 44, "#193e35", 700)
+      y = paragraph("CAD 4,800 · account ending 7719", x, y + 32, width, 40)
+      paragraph("Approval applies to these exact details.", x, y + 36, width, 38)
     }
     if (index === 3) {
-      text("CAD 4,800 → 4,900", x, 498, 60, "#193e35", 700)
-      text("Previous approval", x, 612, 42, "#587269")
-      line(x, 598, x + 343, 598, "#587269", 3)
-      text("Approval removed", x, 720, 44, "#193e35", 700)
-      text("“Payment revision changed”", x, 820, 40, "#a66b20")
-      text("New details need new approval.", x, 930, 38)
+      y = paragraph("CAD 4,800 → 4,900", x, y, width, 60, "#193e35", 700)
+      const approvalTop = y + 38
+      y = paragraph("Previous approval", x, approvalTop, width, 40, "#587269")
+      ctx.font = "400 40px Arial,sans-serif"
+      line(
+        x,
+        approvalTop + 17,
+        x + ctx.measureText("Previous approval").width,
+        approvalTop + 17,
+        "#587269",
+        3,
+      )
+      y = paragraph("“Payment revision changed”", x, y + 52, width, 40, "#a66b20")
+      paragraph("New details need new approval.", x, y + 46, width, 38)
     }
     if (index === 4) {
-      text("New approval: CAD 4,800", x, 470, 44, "#193e35", 700)
-      text("Destination: account ending 7719", x, 550, 40)
-      text("↓", x + 340, 630, 42, "#799489")
-      text("One simulated ledger entry", x, 710, 44, "#193e35", 700)
-      text("Receipt matches this payment.", x, 812, 40)
-      text("A separate HTTP service records it.", x, 930, 38)
+      y = paragraph("New approval: CAD 4,800", x, y, width, 44, "#193e35", 700)
+      y = paragraph("Account ending 7719", x, y + 26, width, 40)
+      text("↓", x + 200, y + 56, 42, "#799489")
+      y = paragraph("One simulated ledger entry", x, y + 96, width, 44, "#193e35", 700)
+      y = paragraph("Receipt matches this payment.", x, y + 38, width, 40)
+      paragraph("A separate HTTP service records it.", x, y + 34, width, 38)
     }
-    disclosure()
   }
   ctx.fillStyle = "#799489"
   ctx.fillRect(0, 0, W, 6)
@@ -386,15 +405,6 @@ function draw(now) {
     fallback()
     renderer?.()
   }
-}
-function disclosure() {
-  text(
-    "Real LLM + Atlas · Synthetic data and human check · Simulated payment · Recorded demo",
-    64,
-    1035,
-    28,
-    "#587269",
-  )
 }
 window.payproofDeck = {
   select: (n) => select(n),
