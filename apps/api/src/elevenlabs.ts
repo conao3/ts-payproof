@@ -1,6 +1,7 @@
 import * as z from "zod"
 import type { Config } from "./config.ts"
 import type { VoiceStatus } from "../../../packages/core/src/voice.ts"
+import { VoiceResponseError } from "./voice-errors.ts"
 
 export function voiceStatus(config: Config): VoiceStatus {
   const transcription = Boolean(config.ELEVENLABS_API_KEY)
@@ -30,7 +31,38 @@ export function createElevenLabs(config: Config, fetcher: typeof fetch = fetch) 
       signal: AbortSignal.timeout(45_000),
     })
     if (!response.ok) throw new Error(`ElevenLabs transcription failed (HTTP ${response.status})`)
-    return z.object({ text: z.string().trim().min(2).max(1000) }).parse(await response.json()).text
+    const raw: unknown = await response.json().catch(() => {
+      throw new VoiceResponseError(
+        "transcription",
+        "invalid_json",
+        "The transcription service returned an invalid response. Try again or type your question",
+      )
+    })
+    const transcript = z.object({ text: z.string() }).safeParse(raw)
+    if (!transcript.success)
+      throw new VoiceResponseError(
+        "transcription",
+        "invalid_transcript",
+        "The transcription service returned an invalid response. Try again or type your question",
+        502,
+        transcript.error.issues.map(({ code, path }) => ({ code, path })),
+      )
+    const text = transcript.data.text.trim()
+    if (text.length < 2)
+      throw new VoiceResponseError(
+        "transcription",
+        "no_speech",
+        "No clear speech was recognized. Check the selected microphone, speak a short question, or type it instead",
+        422,
+      )
+    if (text.length > 1000)
+      throw new VoiceResponseError(
+        "transcription",
+        "question_too_long",
+        "The transcribed question was too long. Ask a shorter question or type it instead",
+        422,
+      )
+    return text
   }
 
   async function speak(text: string): Promise<string> {

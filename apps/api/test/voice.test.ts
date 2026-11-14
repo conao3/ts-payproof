@@ -317,7 +317,10 @@ it("uses authenticated ElevenLabs multipart STT and MP3 TTS without giving eithe
   })
   const form = new FormData()
   form.set("invoiceId", invoiceId)
-  form.set("audio", new File([new Uint8Array([1, 2, 3])], "question.webm", { type: "audio/webm" }))
+  form.set(
+    "audio",
+    new File([new Uint8Array([1, 2, 3])], "question.webm", { type: "audio/webm;codecs=opus" }),
+  )
   const response = await appFor(store, fetcher, settings).request("/api/voice/query", {
     method: "POST",
     headers: { cookie: `payproof_session=${signSession(operator, config.SESSION_SIGNING_KEY)}` },
@@ -364,4 +367,67 @@ it("retains the verified text answer if speech synthesis fails, and labels it un
   expect(answer.speechError).toContain("HTTP 503")
   expect(answer.evidence.length).toBe(2)
   expect(invoiceEvidence(fixture().invoice)[0]!.detail).toContain("ending 7719")
+})
+
+it("reports empty microphone transcription separately without calling the audit model", async () => {
+  const { store, invoice } = fixture()
+  const before = structuredClone(invoice)
+  const fetcher = vi.fn<typeof fetch>(async () => Response.json({ text: " " }))
+  const warning = vi.spyOn(console, "warn").mockImplementation(() => {})
+  try {
+    const form = new FormData()
+    form.set("invoiceId", invoiceId)
+    form.set(
+      "audio",
+      new File([new Uint8Array([1])], "question.webm", { type: "audio/webm;codecs=opus" }),
+    )
+    const response = await appFor(store, fetcher, {
+      ...config,
+      ELEVENLABS_API_KEY: "test-private-voice-key",
+    }).request("/api/voice/query", {
+      method: "POST",
+      headers: { cookie: `payproof_session=${signSession(operator, config.SESSION_SIGNING_KEY)}` },
+      body: form,
+    })
+    expect(response.status).toBe(422)
+    expect(await response.json()).toMatchObject({
+      stage: "transcription",
+      code: "no_speech",
+      error: expect.stringContaining("Check the selected microphone"),
+    })
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(invoice).toEqual(before)
+    expect(JSON.stringify(warning.mock.calls)).not.toContain("test-private-voice-key")
+  } finally {
+    warning.mockRestore()
+  }
+})
+
+it("constrains model evidence limits and still rejects oversized answers without exposing content", async () => {
+  const { store } = fixture()
+  const fetcher = vi.fn<typeof fetch>(async (_url, init) => {
+    const body = jsonBody(init)
+    expect(body.tools[0].function.parameters.properties.evidenceIds.maxItems).toBe(8)
+    expect(body.tools[0].function.parameters.properties.answer.maxLength).toBe(1200)
+    return completion(
+      "cite_audit_evidence",
+      Array.from({ length: 9 }, () => "status"),
+    )
+  })
+  const warning = vi.spyOn(console, "warn").mockImplementation(() => {})
+  try {
+    const response = await appFor(store, fetcher).request(
+      "/api/voice/query",
+      request(operator, "Private question content"),
+    )
+    expect(response.status).toBe(502)
+    expect(await response.json()).toMatchObject({ stage: "explanation", code: "answer_limits" })
+    const diagnostic = JSON.stringify(warning.mock.calls)
+    expect(diagnostic).toContain("evidenceIds")
+    expect(diagnostic).not.toContain("Private question content")
+    expect(diagnostic).not.toContain("This invoice is held")
+    expect(diagnostic).not.toContain(config.LLM_API_KEY)
+  } finally {
+    warning.mockRestore()
+  }
 })

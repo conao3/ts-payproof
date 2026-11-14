@@ -6,6 +6,7 @@ import { readSession } from "./auth.ts"
 import type { Config } from "./config.ts"
 import { voiceStatus } from "./elevenlabs.ts"
 import { answerVoiceQuestion, type VoiceStore } from "./voice.ts"
+import { VoiceResponseError } from "./voice-errors.ts"
 
 export function createVoiceRoutes(
   store: VoiceStore,
@@ -55,9 +56,21 @@ export function createVoiceRoutes(
       }
       return c.json(await answerVoiceQuestion(store, config, actor, invoiceId, input, fetcher))
     } catch (error) {
+      if (error instanceof VoiceResponseError) {
+        console.warn("Voice response rejected", {
+          stage: error.stage,
+          code: error.code,
+          issues: error.issues,
+        })
+        return c.json({ error: error.message, stage: error.stage, code: error.code }, error.status)
+      }
       if (error instanceof z.ZodError || error instanceof SyntaxError)
         return c.json(
-          { error: "The voice request or provider response was invalid. Try again" },
+          {
+            error:
+              "The invoice or question request was invalid. Select the invoice again and ask a short question",
+            stage: "input",
+          },
           400,
         )
       const message = error instanceof Error ? error.message : "Voice questions are unavailable"
