@@ -60,7 +60,7 @@
               src = pkgs.lib.cleanSource ./.;
               inherit pnpm;
               fetcherVersion = 5;
-              hash = "sha256-yoxnpu0qdYWS/yqAYIpQMEyxr9BNvydDzZzgUGpLVlA=";
+              hash = "sha256-N61Q1HblYQEth3ucK3WWTc8UznNSxyJBPE56GxEIHM0=";
             };
             buildPhase = ''
               runHook preBuild
