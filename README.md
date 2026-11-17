@@ -1,3 +1,25 @@
+<p align="center">
+  <img src="docs/assets/banner.png" alt="PayProof: an auditable invoice agent for Canadian construction businesses" width="880">
+</p>
+
+<p align="center"><strong>An invoice agent you can audit: a changed bank account waits for an independent human check</strong></p>
+
+<p align="center">
+  <a href="https://github.com/conao3/ts-payproof/actions/workflows/ci.yml"><img src="https://github.com/conao3/ts-payproof/actions/workflows/ci.yml/badge.svg?branch=master" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/conao3/ts-payproof" alt="License: Apache-2.0"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/Node-%3E%3D26.12.0-339933" alt="Node >=26.12.0"></a>
+  <a href="https://github.com/conao3/ts-payproof/stargazers"><img src="https://img.shields.io/github/stars/conao3/ts-payproof?style=flat" alt="GitHub stars"></a>
+</p>
+
+<p align="center">
+  <a href="#what-the-demonstration-shows">Demo flow</a> ·
+  <a href="#run-locally">Run locally</a> ·
+  <a href="#checks">Checks</a> ·
+  <a href="#structure">Structure</a> ·
+  <a href="https://conao3.github.io/ts-payproof/">Site</a> ·
+  <a href="https://conao3.github.io/ts-payproof/slides/">Pitch</a>
+</p>
+
 # PayProof
 
 An invoice-processing agent for Canadian construction businesses. It reads a supplier email, looks up the supplier in MongoDB Atlas, and proposes a payment. A changed bank account is held until a human records an independent check using the **saved supplier contact**. The exact invoice revision, amount, destination, supplier revision and authorization policy are bound to the approval before a simulated payment can execute.
@@ -7,7 +29,7 @@ Built for **Agents in Context Toronto: a MongoDB Hackathon**, in the **Agents Yo
 ## What the demonstration shows
 
 1. A finance operator submits a synthetic invoice email.
-2. A real tool-calling language model looks up a saved supplier and requests a payment proposal. Email instructions cannot grant approval authority or modify the trusted supplier record.
+2. A real tool-calling language model looks up a saved supplier and requests a payment proposal. Email instructions can't grant approval authority or modify the trusted supplier record.
 3. The server compares the requested destination with Atlas. A changed destination becomes **Verification needed**.
 4. A separately authenticated payment approver uses the saved contact, records the independent check and approves the exact payment details.
 5. The operator delegates execution to the payment agent. The server checks live authority and revisions in an Atlas transaction before calling the separate HTTP simulated-payment service.
@@ -15,7 +37,7 @@ Built for **Agents in Context Toronto: a MongoDB Hackathon**, in the **Agents Yo
 
 Amending the amount or destination invalidates verification and approval. Parallel dispatches share one operation ID; the payment service binds that ID to one immutable instruction. An uncertain HTTP result is reconciled against the same operation rather than generating a fresh payment ID.
 
-**Payments are simulated.** The ledger records synthetic transfers; the application does not connect to a bank or send email. MongoDB Atlas and the configured language-model API are real. This is an application-level audit trail, not a tamper-proof database or a certification of regulatory compliance.
+**Payments are simulated.** The ledger records synthetic transfers; the application doesn't connect to a bank or send email. MongoDB Atlas and the configured language-model API are real. This is an application-level audit trail, not a tamper-proof database or a certification of regulatory compliance.
 
 ## Run locally
 
@@ -29,7 +51,7 @@ cp .env.example .env
 chmod 600 .env
 ```
 
-Fill `.env` with the hackathon-provided Atlas cluster, a tool-calling OpenAI-compatible API endpoint and private access keys. Use different operator and approver keys. Keep the signing and payment keys at least 32 random characters long. The application refuses to start if required values are missing; it does not substitute an in-memory database or a fake model response.
+Fill `.env` with the hackathon-provided Atlas cluster, a tool-calling OpenAI-compatible API endpoint and private access keys. Use different operator and approver keys. Keep the signing and payment keys at least 32 random characters long. The application refuses to start if required values are missing; it doesn't substitute an in-memory database or a fake model response.
 
 ```sh
 pnpm dev
@@ -39,7 +61,7 @@ pnpm dev
 - Application GraphQL API: `http://127.0.0.1:4100/api/graphql`
 - Private simulated-payment API: `http://127.0.0.1:4101/api/graphql`
 
-Sign in with the operator access key to process an email. Use a separate browser profile or sign out and sign in with the approver key to verify and approve. A role selector does not grant authority. The sample buttons use fictional businesses, reserved `.example` domains, fictional bank identifiers and `555-01xx` phone numbers. Change the invoice number in the email when repeating a scenario: supplier/invoice-number uniqueness intentionally prevents duplicate invoices.
+Sign in with the operator access key to process an email. Use a separate browser profile or sign out and sign in with the approver key to verify and approve. A role selector doesn't grant authority. The sample buttons use fictional businesses, reserved `.example` domains, fictional bank identifiers and `555-01xx` phone numbers. Change the invoice number in the email when repeating a scenario: supplier/invoice-number uniqueness intentionally prevents duplicate invoices.
 
 The server initializes validation rules, indexes and synthetic demo principals/suppliers on startup. Existing invoices are retained. `pnpm seed` initializes those records explicitly without deleting existing data.
 
@@ -64,7 +86,7 @@ Only the API process receives the model key. The language model receives a restr
 
 On an invoice, record a question (up to 20 seconds) or type one. ElevenLabs transcribes recordings, the existing configured language model explains permitted Atlas records with validated evidence references, and ElevenLabs generates the spoken answer. The screen shows the transcript, answer, supporting records, invoice revision and observation time. Microphone recording requires HTTPS or localhost and browser permission. Missing voice configuration is shown explicitly; typed questions still return real model answers and Atlas evidence. A synthesis failure preserves the text answer and reports that audio is unavailable.
 
-The voice service receives only `principal` and `get` database capabilities. It checks the signed human session, enabled identity and invoice tenant before any provider request, then checks authority and snapshot freshness again before returning an answer. Its only model tool returns a cited explanation. It cannot verify, approve, amend, cancel or dispatch a payment, even when the spoken question requests those actions. Those actions remain in the existing authorized controls. Raw recordings are forwarded for transcription and are not stored by PayProof. The model receives the question and a bounded evidence snapshot, not the original invoice email, browser cookie or credentials. Only the answer text is sent for speech synthesis; provider retention follows the configured service account's terms.
+The voice service receives only `principal` and `get` database capabilities. It checks the signed human session, enabled identity and invoice tenant before any provider request, then checks authority and snapshot freshness again before returning an answer. Its only model tool returns a cited explanation. It can't verify, approve, amend, cancel or dispatch a payment, even when the spoken question requests those actions. Those actions remain in the existing authorized controls. Raw recordings are forwarded for transcription and aren't stored by PayProof. The model receives the question and a bounded evidence snapshot, not the original invoice email, browser cookie or credentials. Only the answer text is sent for speech synthesis; provider retention follows the configured service account's terms.
 
 Adapters follow the official [ElevenLabs speech-to-text](https://elevenlabs.io/docs/api-reference/speech-to-text/convert) and [text-to-speech](https://elevenlabs.io/docs/api-reference/text-to-speech/convert) APIs. Provider mocks verify the protocol and permission boundaries; a real-key smoke test is a separate validation step.
 
@@ -104,9 +126,9 @@ Real Atlas authorization and concurrency tests use a new, uniquely named tempora
 nix develop --command pnpm test:atlas
 ```
 
-They verify independent confirmation, human/agent separation, tenant isolation, approval invalidation, concurrent approval and dispatch, supplier-revision conflicts, canonical duplicate invoice numbers and cancellation races. The simulated ledger is exercised against real MongoDB in this suite. Unit tests exercise the actual HTTP function-calling protocol against an explicitly controlled provider; they are not presented as live model evaluation.
+They verify independent confirmation, human/agent separation, tenant isolation, approval invalidation, concurrent approval and dispatch, supplier-revision conflicts, canonical duplicate invoice numbers and cancellation races. The simulated ledger is exercised against real MongoDB in this suite. Unit tests exercise the actual HTTP function-calling protocol against an explicitly controlled provider; they aren't presented as live model evaluation.
 
-The check suite includes ten voice authorization and protocol tests, covering tenant isolation, disabled identities, read-only tool access, rejected action requests, unknown citations and snapshot changes. A live smoke test also generated a synthetic question with ElevenLabs, submitted it through the authenticated HTTP endpoint, transcribed it with Scribe v2, obtained an OpenAI answer from actual Atlas records and synthesized that answer with ElevenLabs. All eight returned evidence references matched the invoice. The invoice hash and simulated-ledger count were unchanged. This validated a synthetic audio roundtrip; a person's microphone input is a separate browser test.
+The check suite includes 10 voice authorization and protocol tests, covering tenant isolation, disabled identities, read-only tool access, rejected action requests, unknown citations and snapshot changes. A live smoke test also generated a synthetic question with ElevenLabs, submitted it through the authenticated HTTP endpoint, transcribed it with Scribe v2, obtained an OpenAI answer from actual Atlas records and synthesized that answer with ElevenLabs. All 8 returned evidence references matched the invoice. The invoice hash and simulated-ledger count were unchanged. This validated a synthetic audio roundtrip; a person's microphone input is a separate browser test.
 
 ## Structure
 
@@ -122,11 +144,11 @@ The check suite includes ten voice authorization and protocol tests, covering te
 
 The PayProof-specific domain rules, Atlas state transitions, approval binding, audit events, agent tools, simulated-payment service, workflow UI and tests were written during the November 14 event build period. The repository was initialized on November 14; no prior application or proprietary business data was imported.
 
-External libraries provide the general infrastructure: React, React Aria Components, Tailwind CSS, Lucide, Apollo Server/Client, Hono, the Hono Apollo integration, GraphQL Code Generator, MongoDB's Node driver, Zod, Vite+, Vitest and MSW. Nixpkgs, flake-parts and treefmt-nix provide the build environment. This repository does not use an external application starter template. The supplier, invoice and ledger examples are synthetic fixtures written for this project. The configured model is an external API, not a model trained during the event.
+External libraries provide the general infrastructure: React, React Aria Components, Tailwind CSS, Lucide, Apollo Server/Client, Hono, the Hono Apollo integration, GraphQL Code Generator, MongoDB's Node driver, Zod, Vite+, Vitest and MSW. Nixpkgs, flake-parts and treefmt-nix provide the build environment. This repository doesn't use an external application starter template. The supplier, invoice and ledger examples are synthetic fixtures written for this project. The configured model is an external API, not a model trained during the event.
 
-The Canadian Anti-Fraud Centre describes payment-redirection attacks against small and medium businesses, including construction and contracting, and recommends independently verifying banking changes with trusted contact information. PayProof demonstrates an enforceable workflow for that problem; it does not claim to detect every fraudulent invoice. [CAFC, May 13, 2026](https://antifraudcentre-centreantifraude.ca/news-nouvelles/2026/2026-05-13-eng.htm).
+The Canadian Anti-Fraud Centre describes payment-redirection attacks against small and medium businesses, including construction and contracting, and recommends independently verifying banking changes with trusted contact information. PayProof demonstrates an enforceable workflow for that problem; it doesn't claim to detect every fraudulent invoice. [CAFC, May 13, 2026](https://antifraudcentre-centreantifraude.ca/news-nouvelles/2026/2026-05-13-eng.htm).
 
-Function-calling implementation follows the [official OpenAI function-calling guide](https://developers.openai.com/api/docs/guides/function-calling). The server uses the configured provider and model and does not silently switch providers.
+Function-calling implementation follows the [official OpenAI function-calling guide](https://developers.openai.com/api/docs/guides/function-calling). The server uses the configured provider and model and doesn't silently switch providers.
 
 ## License
 
